@@ -47,7 +47,7 @@ public interface ProductsApi {
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = Error.class)))
             })
-    @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/products/search", produces = MediaType.APPLICATION_JSON_VALUE)
     default ResponseEntity<ProductList> fetchProducts(
             @RequestParam(value = "nutriscore", required = false) String nutriscore,
             @RequestParam(value = "category", required = false) String category,
