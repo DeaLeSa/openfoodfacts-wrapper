@@ -25,14 +25,16 @@ To set up your Spring Boot application, create an `application.properties` file 
 
 5. Run the application: `mvn spring-boot:run`
 
-The application will start running on http://localhost:8080.
+The application will start running on [http://localhost:8080](http://localhost:8080).  
+
+After starting the application, you can access the Swagger UI documentation at [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html) to explore the available REST endpoints.
 
 ## Using the Wrapper
 
 Once the application is running, you can access the following RESTful endpoints:
 
 **/api/v1/products/7622210449283**: Retrieves detailed information about a product with the specified barcode.  
-**/api/v1/products?nutriscore=b&brand=Innocent&category=Orange%20juice&page=1**: Searches for products based on queries.
+**/api/v1/products/search?nutriscore=b&brand=Innocent&category=Orange%20juice&page=1**: Searches for products based on queries.
 
 ## Contributing 🤝
 
