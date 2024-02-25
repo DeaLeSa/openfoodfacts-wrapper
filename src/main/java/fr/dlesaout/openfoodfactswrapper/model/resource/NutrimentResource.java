@@ -1,7 +1,6 @@
-package fr.dlesaout.openfoodfactswrapper.model;
+package fr.dlesaout.openfoodfactswrapper.model.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,30 +8,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonTypeName("Nutriment")
-@Schema(name = "Nutriment", description = "Nutritional values for various components of a product.")
+@JsonTypeName("NutrimentResource")
+@Schema(name = "NutrimentResource", description = "Nutritional values for various components of a product.")
 @Data
 @NoArgsConstructor
-public class Nutriment {
+public class NutrimentResource {
 
     @JsonProperty("calcium")
     @Schema(description = "Amount of calcium.")
     private Float calcium;
 
-    @JsonProperty("calciumValue")
+    @JsonProperty("calcium_value")
     @Schema(description = "Value of calcium.")
     private Float calciumValue;
 
-    @JsonProperty("calcium100G")
+    @JsonProperty("calcium_100g")
     @Schema(description = "Amount of calcium per 100g.")
     private Float calcium100G;
 
-    @JsonProperty("calciumServing")
+    @JsonProperty("calcium_serving")
     @Schema(description = "Amount of calcium per serving.")
     private Float calciumServing;
 
-    @JsonProperty("calciumUnit")
+    @JsonProperty("calcium_unit")
     @Schema(description = "Unit of calcium measurement.")
     private String calciumUnit;
 
@@ -40,19 +38,19 @@ public class Nutriment {
     @Schema(description = "Amount of carbohydrates.")
     private Float carbohydrates;
 
-    @JsonProperty("carbohydratesValue")
+    @JsonProperty("carbohydrates_value")
     @Schema(description = "Value of carbohydrates.")
     private Float carbohydratesValue;
 
-    @JsonProperty("carbohydrates100G")
+    @JsonProperty("carbohydrates_100g")
     @Schema(description = "Amount of carbohydrates per 100g.")
     private Float carbohydrates100G;
 
-    @JsonProperty("carbohydratesServing")
+    @JsonProperty("carbohydrates_serving")
     @Schema(description = "Amount of carbohydrates per serving.")
     private Float carbohydratesServing;
 
-    @JsonProperty("carbohydratesUnit")
+    @JsonProperty("carbohydrates_unit")
     @Schema(description = "Unit of carbohydrates measurement.")
     private String carbohydratesUnit;
 
@@ -100,119 +98,119 @@ public class Nutriment {
     @Schema(description = "Amount of vitamin D.")
     private Float vitaminD;
 
-    @JsonProperty("carbonFootprintFromKnownIngredients100g")
+    @JsonProperty("carbon-footprint-from-known-ingredients_100g")
     @Schema(description = "Carbon footprint from known ingredients per 100g.")
     private Float carbonFootprintFromKnownIngredients100g;
 
-    @JsonProperty("carbonFootprintFromKnownIngredientsProduct")
+    @JsonProperty("carbon-footprint-from-known-ingredients_product")
     @Schema(description = "Total carbon footprint from known ingredients for the product.")
     private Float carbonFootprintFromKnownIngredientsProduct;
 
-    @JsonProperty("carbonFootprintFromKnownIngredientsServing")
+    @JsonProperty("carbon-footprint-from-known-ingredients_serving")
     @Schema(description = "Carbon footprint from known ingredients per serving.")
     private Float carbonFootprintFromKnownIngredientsServing;
 
-    @JsonProperty("energyKcal")
+    @JsonProperty("energy-kcal")
     @Schema(description = "Energy content in kcal.")
     private Integer energyKcal;
 
-    @JsonProperty("energyKcal100g")
+    @JsonProperty("energy-kcal_100g")
     @Schema(description = "Energy content in kcal per 100g.")
     private Integer energyKcal100g;
 
-    @JsonProperty("energyKcalServing")
+    @JsonProperty("energy-kcal_serving")
     @Schema(description = "Energy content in kcal per serving.")
     private Integer energyKcalServing;
 
-    @JsonProperty("energyKcalUnit")
+    @JsonProperty("energy-kcal_unit")
     @Schema(description = "Unit of energy measurement in kcal.")
     private String energyKcalUnit;
 
-    @JsonProperty("energyKcalValue")
+    @JsonProperty("energy-kcal_value")
     @Schema(description = "Energy value in kcal.")
     private Integer energyKcalValue;
 
-    @JsonProperty("energyKcalValueComputed")
+    @JsonProperty("energy-kcal_value_computed")
     @Schema(description = "Computed energy value in kcal.")
     private Float energyKcalValueComputed;
 
-    @JsonProperty("energyKj")
+    @JsonProperty("energy-kj")
     @Schema(description = "Energy content in kJ.")
     private Integer energyKj;
 
-    @JsonProperty("energyKj100g")
+    @JsonProperty("energy-kj_100g")
     @Schema(description = "Energy content in kJ per 100g.")
     private Integer energyKj100g;
 
-    @JsonProperty("energyKjServing")
+    @JsonProperty("energy-kj_serving")
     @Schema(description = "Energy content in kJ per serving.")
     private Integer energyKjServing;
 
-    @JsonProperty("energyKjUnit")
+    @JsonProperty("energy-kj_unit")
     @Schema(description = "Unit of energy measurement in kJ.")
     private String energyKjUnit;
 
-    @JsonProperty("energyKjValue")
+    @JsonProperty("energy-kj_value")
     @Schema(description = "Energy value in kJ.")
     private Integer energyKjValue;
 
-    @JsonProperty("energyKjValueComputed")
+    @JsonProperty("energy-kj_value_computed")
     @Schema(description = "Computed energy value in kJ.")
     private Float energyKjValueComputed;
 
-    @JsonProperty("fruitsVegetablesLegumesEstimateFromIngredients100g")
+    @JsonProperty("fruits-vegetables-legumes-estimate-from-ingredients_100g")
     @Schema(description = "Estimate of fruits, vegetables, and legumes from ingredients per 100g.")
     private Float fruitsVegetablesLegumesEstimateFromIngredients100g;
 
-    @JsonProperty("fruitsVegetablesLegumesEstimateFromIngredientsServing")
+    @JsonProperty("fruits-vegetables-legumes-estimate-from-ingredients_serving")
     @Schema(description = "Estimate of fruits, vegetables, and legumes from ingredients per serving.")
     private Float fruitsVegetablesLegumesEstimateFromIngredientsServing;
 
-    @JsonProperty("fruitsVegetablesNutsEstimateFromIngredients100g")
+    @JsonProperty("fruits-vegetables-nuts-estimate-from-ingredients_100g")
     @Schema(description = "Estimate of fruits, vegetables, and nuts from ingredients per 100g.")
     private Float fruitsVegetablesNutsEstimateFromIngredients100g;
 
-    @JsonProperty("fruitsVegetablesNutsEstimateFromIngredientsServing")
+    @JsonProperty("fruits-vegetables-nuts-estimate-from-ingredients_serving")
     @Schema(description = "Estimate of fruits, vegetables, and nuts from ingredients per serving.")
     private Float fruitsVegetablesNutsEstimateFromIngredientsServing;
 
-    @JsonProperty("novaGroup")
+    @JsonProperty("nova-group")
     @Schema(description = "NOVA group classification.")
     private Integer novaGroup;
 
-    @JsonProperty("novaGroup100g")
+    @JsonProperty("nova-group_100g")
     @Schema(description = "NOVA group classification per 100g.")
     private Integer novaGroup100g;
 
-    @JsonProperty("novaGroupServing")
+    @JsonProperty("nova-group_serving")
     @Schema(description = "NOVA group classification per serving.")
     private Integer novaGroupServing;
 
-    @JsonProperty("nutritionScoreFr")
+    @JsonProperty("nutrition-score-fr")
     @Schema(description = "French nutrition score.")
     private Integer nutritionScoreFr;
 
-    @JsonProperty("nutritionScoreFr100g")
+    @JsonProperty("nutrition-score-fr_100g")
     @Schema(description = "French nutrition score per 100g.")
     private Integer nutritionScoreFr100g;
 
-    @JsonProperty("saturatedFat")
+    @JsonProperty("saturated-fat")
     @Schema(description = "Amount of saturated fat.")
     private Float saturatedFat;
 
-    @JsonProperty("saturatedFat100g")
+    @JsonProperty("saturated-fat_100g")
     @Schema(description = "Amount of saturated fat per 100g.")
     private Float saturatedFat100g;
 
-    @JsonProperty("saturatedFatServing")
+    @JsonProperty("saturated-fat_serving")
     @Schema(description = "Amount of saturated fat per serving.")
     private Float saturatedFatServing;
 
-    @JsonProperty("saturatedFatUnit")
+    @JsonProperty("saturated-fat_unit")
     @Schema(description = "Unit of saturated fat measurement.")
     private String saturatedFatUnit;
 
-    @JsonProperty("saturatedFatValue")
+    @JsonProperty("saturated-fat_value")
     @Schema(description = "Value of saturated fat.")
     private Float saturatedFatValue;
 

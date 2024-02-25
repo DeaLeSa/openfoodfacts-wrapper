@@ -4,7 +4,7 @@ public enum ApiUrls {
 
     BASE("https://fr.openfoodfacts.net/api/v2"),
     BASE_SEARCH("https://fr.openfoodfacts.net/api/v2/search?"),
-    PRODUCT_BY_CODE(BASE + "/product/%s.json");
+    PRODUCT_BY_CODE("https://fr.openfoodfacts.net/api/v2/product/%s.json");
 
     public final String url;
 

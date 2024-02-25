@@ -23,7 +23,7 @@ public class NutrientLevel {
   private String salt;
 
   @Schema(description = "Level of saturated fat in the product, which could be low, medium, or high.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("saturated_fat")
+  @JsonProperty("saturatedFat")
   private String saturatedFat;
 
   @Schema(description = "Level of sugars in the product, which could be low, medium, or high.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)

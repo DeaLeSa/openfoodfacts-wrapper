@@ -1,9 +1,6 @@
 package fr.dlesaout.openfoodfactswrapper.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.Getter;
@@ -20,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonTypeName("Product")
 @Schema(name = "Product", description = "Represents a product with detailed information.")
-public class Product {
+public class ProductItem {
 
     @Schema(description = "Image of the product")
     private Image image;
@@ -28,7 +25,6 @@ public class Product {
     @Schema(description = "List of ingredients in the product")
     private List<Ingredient> ingredients;
 
-    @JsonProperty("nutriments")
     @Schema(description = "List of nutriments in the product")
     private Nutriment nutriments;
 
@@ -40,6 +36,9 @@ public class Product {
     @Schema(description = "Nutrient levels of the product")
     private NutrientLevel nutrientLevels;
 
+    @Schema(description = "Nutritional information of the product")
+    private List<Nutriment> nutriment;
+
     @JsonProperty("selectedImages")
     @Schema(description = "Selected images of the product")
     private SelectedImage selectedImages;
@@ -49,57 +48,61 @@ public class Product {
 
     @JsonProperty("additives")
     @Schema(description = "Additives")
-    private Additive additives;
+    private Additive additive;
 
-    @JsonProperty("additivesN")
+    @JsonIgnore
     @Schema(description = "Number of additives")
     private int additivesN;
 
-    @JsonProperty("additivesOldN")
+    @JsonIgnore
     @Schema(description = "Old number of additives")
     private int additivesOldN;
 
-    @JsonProperty("additivesOriginalTags")
+    @JsonIgnore
     @Schema(description = "Original tags for additives")
     private String[] additivesOriginalTags;
 
-    @JsonProperty("additivesOldTags")
+    @JsonIgnore
     @Schema(description = "Old tags for additives")
     private String[] additivesOldTags;
 
-    @JsonProperty("additivesPrevOriginalTags")
+    @JsonIgnore
     @Schema(description = "Previous original tags for additives")
     private String[] additivesPrevOriginalTags;
 
-    @JsonProperty("additivesDebugTags")
+    @JsonIgnore
     @Schema(description = "Debug tags for additives")
     private String[] additivesDebugTags;
 
-    @JsonProperty("additivesTags")
+    @JsonIgnore
     @Schema(description = "Tags for additives")
     private String[] additivesTags;
 
-    @JsonProperty("allergens")
+    @JsonProperty("allergenicSubstances")
+    @Schema(description = "Allergens present in the product")
+    private Allergen allergen;
+
+    @JsonIgnore
     @Schema(description = "Allergens present in the product")
     private String allergens;
 
-    @JsonProperty("allergens_from_ingredients")
+    @JsonIgnore
     @Schema(description = "Allergens from ingredients")
     private String allergensFromIngredients;
 
-    @JsonProperty("allergens_from_user")
+    @JsonIgnore
     @Schema(description = "Allergens reported by the user")
     private String allergensFromUser;
 
-    @JsonProperty("allergens_hierarchy")
+    @JsonIgnore
     @Schema(description = "Hierarchy of allergens")
     private String[] allergensHierarchy;
 
-    @JsonProperty("allergens_lc")
+    @JsonIgnore
     @Schema(description = "Language code for allergens information")
     private String allergensLc;
 
-    @JsonProperty("allergens_tags")
+    @JsonIgnore
     @Schema(description = "Tags for allergens")
     private String[] allergensTags;
 
@@ -107,27 +110,19 @@ public class Product {
     @Schema(description = "Countries where the product is available")
     private String countries;
 
-    @JsonProperty("countries_hierarchy")
+    @JsonProperty("countriesHierarchy")
     @Schema(description = "Hierarchy of countries for the product")
     private String[] countriesHierarchy;
 
-    @JsonProperty("countries_lc")
+    @JsonProperty("countriesLc")
     @Schema(description = "Language code for countries information")
     private String countriesLc;
 
-    @JsonProperty("countries_debug_tags")
-    @Schema(description = "Debug tags related to countries")
-    private String[] countriesDebugTags;
-
-    @JsonProperty("countries_tags")
+    @JsonProperty("countriesTags")
     @Schema(description = "Tags for countries")
     private String[] countriesTags;
 
-    @JsonProperty("correctors_tags")
-    @Schema(description = "Tags for users who corrected the product information")
-    private String[] correctorsTags;
-
-    @JsonProperty("created_t")
+    @JsonProperty("createdT")
     @Schema(description = "Timestamp of product creation")
     private long createdT;
 
@@ -135,170 +130,59 @@ public class Product {
     @Schema(description = "Creator of the product entry")
     private String creator;
 
-    @JsonProperty("data_quality_bugs_tags")
-    @Schema(description = "Tags related to data quality bugs")
-    private String[] dataQualityBugsTags;
-
-    @JsonProperty("data_quality_errors_tags")
-    @Schema(description = "Tags related to data quality errors")
-    private String[] dataQualityErrorsTags;
-
-    @JsonProperty("data_quality_info_tags")
-    @Schema(description = "Tags related to data quality information")
-    private String[] dataQualityInfoTags;
-
-    @JsonProperty("data_quality_tags")
-    @Schema(description = "Tags for overall data quality")
-    private String[] dataQualityTags;
-
-    @JsonProperty("data_quality_warnings_tags")
-    @Schema(description = "Tags related to data quality warnings")
-    private String[] dataQualityWarningsTags;
-
-    @JsonProperty("data_sources")
-    @Schema(description = "Sources of the data")
-    private String dataSources;
-
-    @JsonProperty("data_sources_tags")
-    @Schema(description = "Tags for the data sources")
-    private String[] dataSourcesTags;
-
-    @JsonProperty("debug_param_sorted_langs")
-    @Schema(description = "Debug information for sorted languages")
-    private String[] debugParamSortedLangs;
-
-    @JsonProperty("editors_tags")
-    @Schema(description = "Tags for the editors of the product")
-    private String[] editorsTags;
-
-    @JsonProperty("emb_codes")
+    @JsonProperty("embCodes")
     @Schema(description = "Emb codes of the product")
     private String embCodes;
 
-    @JsonProperty("emb_codes_debug_tags")
-    @Schema(description = "Debug tags related to emb codes")
-    private String[] embCodesDebugTags;
-
-    @JsonProperty("emb_codes_orig")
+    @JsonProperty("embCodesOrig")
     @Schema(description = "Original emb codes of the product")
     private String embCodesOrig;
 
-    @JsonProperty("emb_codes_tags")
+    @JsonProperty("embCodesTags")
     @Schema(description = "Tags for the emb codes")
     private String[] embCodesTags;
 
-    @JsonProperty("entry_dates_tags")
-    @Schema(description = "Entry dates tags for the product")
-    private String[] entryDatesTags;
-
-    @JsonProperty("expiration_date")
+    @JsonProperty("expirationDate")
     @Schema(description = "Expiration date of the product")
     private String expirationDate;
 
-    @JsonProperty("expiration_date_debug_tags")
-    @Schema(description = "Debug tags for expiration date")
-    private String[] expirationDateDebugTags;
-
-    @JsonProperty("fruits-vegetables-nuts_100g_estimate")
+    @JsonProperty("fruitsVegetablesNuts100GEstimate")
     @Schema(description = "Estimate of fruits, vegetables, and nuts per 100g")
     private int fruitsVegetablesNuts100GEstimate;
 
-    @JsonProperty("generic_name")
+    @JsonProperty("genericName")
     @Schema(description = "Generic name of the product")
     private String genericName;
 
+    @JsonProperty("id")
     @Schema(description = "Unique identifier for the product")
     private String id;
 
-    @JsonProperty("_id")
+    @JsonProperty("altId")
     @Schema(description = "Alternate unique identifier for the product")
     private String _id;
 
-    @JsonProperty("image_front_small_url")
-    @Schema(description = "URL for the small front image of the product")
-    private String imageFrontSmallUrl;
-
-    @JsonProperty("image_front_thumb_url")
-    @Schema(description = "URL for the thumbnail front image of the product")
-    private String imageFrontThumbUrl;
-
-    @JsonProperty("image_front_url")
-    @Schema(description = "URL for the front image of the product")
-    private String imageFrontUrl;
-
-    @JsonProperty("image_ingredients_url")
-    @Schema(description = "URL for the ingredients image of the product")
-    private String imageIngredientsUrl;
-
-    @JsonProperty("image_ingredients_small_url")
-    @Schema(description = "URL for the small ingredients image of the product")
-    private String imageIngredientsSmallUrl;
-
-    @JsonProperty("image_ingredients_thumb_url")
-    @Schema(description = "URL for the thumbnail ingredients image of the product")
-    private String imageIngredientsThumbUrl;
-
-    @JsonProperty("image_nutrition_small_url")
-    @Schema(description = "URL for the small nutrition image of the product")
-    private String imageNutritionSmallUrl;
-
-    @JsonProperty("image_nutrition_thumb_url")
-    @Schema(description = "URL for the thumbnail nutrition image of the product")
-    private String imageNutritionThumbUrl;
-
-    @JsonProperty("image_nutrition_url")
-    @Schema(description = "URL for the nutrition image of the product")
-    private String imageNutritionUrl;
-
-    @JsonProperty("image_small_url")
-    @Schema(description = "URL for the small image of the product")
-    private String imageSmallUrl;
-
-    @JsonProperty("image_thumb_url")
-    @Schema(description = "URL for the thumbnail image of the product")
-    private String imageThumbUrl;
-
-    @JsonProperty("image_url")
-    @Schema(description = "URL for the image of the product")
-    private String imageUrl;
-
-    @JsonProperty("informers_tags")
-    @Schema(description = "Tags for the informers of the product")
-    private String[] informersTags;
-
-    @JsonProperty("ingredients_analysis_tags")
-    @Schema(description = "Tags for the analysis of the ingredients")
-    private String[] ingredientsAnalysisTags;
-
-    @JsonProperty("ingredients_debug")
-    @Schema(description = "Debug information for ingredients")
-    private String[] ingredientsDebug;
-
-    @JsonProperty("ingredients_from_or_that_may_be_from_palm_oil_n")
+    @JsonProperty("ingredientsFromOrThatMayBeFromPalmOilN")
     @Schema(description = "Number of ingredients that are or may be from palm oil")
     private int ingredientsFromOrThatMayBeFromPalmOilN;
 
-    @JsonProperty("ingredients_from_palm_oil_tags")
+    @JsonProperty("ingredientsFromPalmOilTags")
     @Schema(description = "Tags for ingredients from palm oil")
     private String[] ingredientsFromPalmOilTags;
 
-    @JsonProperty("ingredients_from_palm_oil_n")
+    @JsonProperty("ingredientsFromPalmOilN")
     @Schema(description = "Number of ingredients from palm oil")
     private int ingredientsFromPalmOilN;
 
-    @JsonProperty("ingredients_hierarchy")
+    @JsonProperty("ingredientsHierarchy")
     @Schema(description = "Hierarchy of ingredients")
     private String[] ingredientsHierarchy;
 
-    @JsonProperty("ingredients_ids_debug")
-    @Schema(description = "Debug IDs for ingredients")
-    private String[] ingredientsIdsDebug;
-
-    @JsonProperty("ingredients_n")
+    @JsonProperty("ingredientsN")
     @Schema(description = "Number of ingredients")
     private int ingredientsN;
 
-    @JsonProperty("ingredients_n_tags")
+    @JsonProperty("ingredientsNTags")
     @Schema(description = "Tags related to the number of ingredients")
     private String[] ingredientsNTags;
 
@@ -306,320 +190,271 @@ public class Product {
     @Schema(description = "Original tags for ingredients")
     private String[] ingredientsOriginalTags;
 
-    @JsonProperty("ingredients_tags")
+    @JsonProperty("ingredientsTags")
     @Schema(description = "Tags for ingredients")
     private String[] ingredientsTags;
 
-    @JsonProperty("ingredients_text")
-    @Schema(description = "Text description of ingredients")
-    private String ingredientsText;
-
-    @JsonProperty("ingredients_text_debug")
+    @JsonProperty("ingredientsText")
     @Schema(description = "Debug text for ingredients")
     private String ingredientsTextDebug;
 
-    @JsonProperty("ingredients_text_with_allergens")
-    @Schema(description = "Ingredients text including allergens")
-    private String ingredientsTextWithAllergens;
-
-    @JsonProperty("ingredients_that_may_be_from_palm_oil_n")
+    @JsonProperty("ingredientsThatMayBeFromPalmOilN")
     @Schema(description = "Number of ingredients that may be from palm oil")
     private int ingredientsThatMayBeFromPalmOilN;
 
-    @JsonProperty("ingredients_that_may_be_from_palm_oil_tags")
+    @JsonProperty("ingredientsThatMayBeFromPalmOilTags")
     @Schema(description = "Tags for ingredients that may be from palm oil")
     private String[] ingredientsThatMayBeFromPalmOilTags;
 
-    @JsonProperty("interface_version_created")
-    @Schema(description = "The interface version when the product was created")
-    private String interfaceVersionCreated;
-
-    @JsonProperty("interface_version_modified")
-    @Schema(description = "The interface version when the product was last modified")
-    private String interfaceVersionModified;
-
-    @JsonProperty("_keywords")
+    @JsonProperty("keywords")
     @Schema(description = "Keywords associated with the product")
     private String[] keywords;
 
-    @JsonProperty("known_ingredients_n")
+    @JsonProperty("knownIngredientsN")
     @Schema(description = "Number of known ingredients in the product")
     private int knownIngredientsN;
 
+    @JsonProperty("labels")
     @Schema(description = "Labels of the product")
     private String labels;
 
-    @JsonProperty("labels_hierarchy")
+    @JsonProperty("labelsHierarchy")
     @Schema(description = "Hierarchy of labels associated with the product")
     private String[] labelsHierarchy;
 
-    @JsonProperty("labels_lc")
+    @JsonProperty("labelsLc")
     @Schema(description = "Language code for labels")
     private String labelsLc;
 
-    @JsonProperty("labels_prev_hierarchy")
+    @JsonProperty("labelsPrevHierarchy")
     @Schema(description = "Previous hierarchy of labels associated with the product")
     private String[] labelsPrevHierarchy;
 
-    @JsonProperty("labels_prev_tags")
+    @JsonProperty("labelsPrevTags")
     @Schema(description = "Previous tags of labels associated with the product")
     private String[] labelsPrevTags;
 
-    @JsonProperty("labels_tags")
+    @JsonProperty("labelsTags")
     @Schema(description = "Tags of labels associated with the product")
     private String[] labelsTags;
 
-    @JsonProperty("labels_debug_tags")
-    @Schema(description = "Debug tags for labels")
-    private String[] labelsDebugTags;
-
+    @JsonProperty("languages")
     @Schema(description = "Language of the product")
     private String lang;
 
-    @JsonProperty("lang_debug_tags")
-    @Schema(description = "Debug tags for language")
-    private String[] langDebugTags;
-
-    @JsonProperty("languages_hierarchy")
+    @JsonProperty("languagesHierarchy")
     @Schema(description = "Hierarchy of languages available for the product")
     private String[] languagesHierarchy;
 
-    @JsonProperty("languages_tags")
+    @JsonProperty("languagesTags")
     @Schema(description = "Tags for languages available for the product")
     private String[] languagesTags;
 
-    @JsonProperty("last_edit_dates_tags")
+    @JsonProperty("lastEditDatesTags")
     @Schema(description = "Tags for the last edit dates")
     private String[] lastEditDatesTags;
 
-    @JsonProperty("last_editor")
-    @Schema(description = "The last editor of the product")
-    private String lastEditor;
-
-    @JsonProperty("last_image_dates_tags")
+    @JsonProperty("lastImageDatesTags")
     @Schema(description = "Tags for the dates of the last images uploaded")
     private String[] lastImageDatesTags;
 
-    @JsonProperty("last_image_t")
+    @JsonProperty("lastImageT")
     @Schema(description = "Timestamp for the last image uploaded")
     private long lastImageT;
 
-    @JsonProperty("last_modified_by")
-    @Schema(description = "The user who last modified the product")
-    private String lastModifiedBy;
-
-    @JsonProperty("last_modified_t")
-    @Schema(description = "Timestamp for the last modification of the product")
-    private long lastModifiedT;
-
+    @JsonProperty("languageCode")
     @Schema(description = "Language code")
     private String lc;
 
+    @JsonProperty("link")
     @Schema(description = "Link to the product page")
     private String link;
 
-    @JsonProperty("link_debug_tags")
+    @JsonProperty("linkDebugTags")
     @Schema(description = "Debug tags for link")
     private String[] linkDebugTags;
 
-    @JsonProperty("manufacturing_places")
+    @JsonProperty("manufacturingPlaces")
     @Schema(description = "Places where the product was manufactured")
     private String manufacturingPlaces;
 
-    @JsonProperty("manufacturing_places_debug_tags")
+    @JsonProperty("manufacturingPlacesDebugTags")
     @Schema(description = "Debug tags for manufacturing places")
     private String[] manufacturingPlacesDebugTags;
 
-    @JsonProperty("manufacturing_places_tags")
+    @JsonProperty("manufacturingPlacesTags")
     @Schema(description = "Tags for manufacturing places")
     private String[] manufacturingPlacesTags;
 
-    @JsonProperty("max_imgid")
+    @JsonProperty("maxImgid")
     @Schema(description = "Maximum image ID of the product")
     private String maxImgid;
 
-    @JsonProperty("minerals_prev_tags")
+    @JsonProperty("mineralsPrevTags")
     @Schema(description = "Previous tags for minerals")
     private String[] mineralsPrevTags;
 
-    @JsonProperty("minerals_tags")
+    @JsonProperty("mineralsTags")
     @Schema(description = "Tags for minerals")
     private String[] mineralsTags;
 
-    @JsonProperty("misc_tags")
+    @JsonProperty("miscTags")
     @Schema(description = "Miscellaneous tags")
     private String[] miscTags;
 
-    @JsonProperty("net_weight_unit")
+    @JsonProperty("netWeightUnit")
     @Schema(description = "Unit of the net weight")
     private String netWeightUnit;
 
-    @JsonProperty("net_weight_value")
+    @JsonProperty("netWeightValue")
     @Schema(description = "Value of the net weight")
     private String netWeightValue;
 
-    @JsonProperty("nutrition_data_per")
+    @JsonProperty("nutritionDataPer")
     @Schema(description = "Basis of the nutrition data (e.g., 'per serving', 'per 100g')")
     private String nutritionDataPer;
 
-    @JsonProperty("nutrition_score_warning_no_fruits_vegetables_nuts")
+    @JsonProperty("nutritionScoreWarningNoFruitsVegetablesNuts")
     @Schema(description = "Nutrition score warning regarding the absence of fruits, vegetables, and nuts")
     private int nutritionScoreWarningNoFruitsVegetablesNuts;
 
-    @JsonProperty("no_nutrition_data")
+    @JsonProperty("noNutritionData")
     @Schema(description = "Indicator if there is no nutrition data")
     private String noNutritionData;
 
-    @JsonProperty("nova_group")
+    @JsonProperty("novaGroup")
     @Schema(description = "NOVA group for the product")
     private String novaGroup;
 
-    @JsonProperty("nova_groups")
+    @JsonProperty("novaGroups")
     @Schema(description = "NOVA groups for the product")
     private String novaGroups;
 
-    @JsonProperty("nova_group_debug")
+    @JsonProperty("novaGroupDebug")
     @Schema(description = "Debug information for NOVA group")
     private String novaGroupDebug;
 
-    @JsonProperty("nova_group_tags")
+    @JsonProperty("novaGroupTags")
     @Schema(description = "Tags for NOVA group")
     private String[] novaGroupTags;
 
-    @JsonProperty("nova_groups_tags")
+    @JsonProperty("novaGroupsTags")
     @Schema(description = "Tags for NOVA groups")
     private String[] novaGroupsTags;
 
-    @JsonProperty("nucleotides_prev_tags")
+    @JsonProperty("nucleotidesPrevTags")
     @Schema(description = "Previous tags for nucleotides")
     private String[] nucleotidesPrevTags;
 
-    @JsonProperty("nucleotides_tags")
+    @JsonProperty("nucleotidesTags")
     @Schema(description = "Tags for nucleotides")
     private String[] nucleotidesTags;
 
-    @JsonProperty("nutrient_levels_tags")
+    @JsonProperty("nutrientLevelsTags")
     @Schema(description = "Tags for nutrient levels")
     private String[] nutrientLevelsTags;
 
-    @JsonProperty("nutrition_data")
+    @JsonProperty("nutritionData")
     @Schema(description = "Nutrition data for the product")
     private String nutritionData;
 
-    @JsonProperty("nutrition_data_per_debug_tags")
+    @JsonProperty("nutritionDataPerDebugTags")
     @Schema(description = "Debug tags for nutrition data per unit")
     private String[] nutritionDataPerDebugTags;
 
-    @JsonProperty("nutrition_data_prepared")
+    @JsonProperty("nutritionDataPrepared")
     @Schema(description = "Nutrition data for the prepared product")
     private String nutritionDataPrepared;
 
-    @JsonProperty("nutrition_data_prepared_per")
+    @JsonProperty("nutritionDataPreparedPer")
     @Schema(description = "Basis of the prepared nutrition data")
     private String nutritionDataPreparedPer;
 
-    @JsonProperty("nutrition_grades")
+    @JsonProperty("nutritionGrades")
     @Schema(description = "Nutrition grades for the product")
     private String nutritionGrades;
 
-    @JsonProperty("nutrition_score_beverage")
+    @JsonProperty("nutritionScoreBeverage")
     @Schema(description = "Nutrition score for beverages")
     private int nutritionScoreBeverage;
 
-    @JsonProperty("nutrition_score_debug")
+    @JsonProperty("nutritionScoreDebug")
     @Schema(description = "Debug information for nutrition score")
     private String nutritionScoreDebug;
 
-    @JsonProperty("nutrition_score_warning_no_fiber")
+    @JsonProperty("nutritionScoreWarningNoFiber")
     @Schema(description = "Nutrition score warning for no fiber")
     private int nutritionScoreWarningNoFiber;
 
-    @JsonProperty("nutrition_grades_tags")
+    @JsonProperty("nutritionGradesTags")
     @Schema(description = "Tags for nutrition grades")
     private String[] nutritionGradesTags;
 
+    @JsonProperty("origins")
     @Schema(description = "Origins of the product")
     private String origins;
 
-    @JsonProperty("origins_debug_tags")
+    @JsonProperty("originsDebugTags")
     @Schema(description = "Debug tags for origins")
     private String[] originsDebugTags;
 
-    @JsonProperty("origins_tags")
+    @JsonProperty("originsTags")
     @Schema(description = "Tags for origins")
     private String[] originsTags;
 
-    @JsonProperty("other_information")
+    @JsonProperty("otherInformation")
     @Schema(description = "Other information about the product")
     private String otherInformation;
 
-    @JsonProperty("other_nutritional_substances_tags")
+    @JsonProperty("otherNutritionalSubstancesTags")
     @Schema(description = "Tags for other nutritional substances")
     private String[] otherNutritionalSubstancesTags;
 
+    @JsonProperty("packaging")
     @Schema(description = "Packaging of the product")
     private String packaging;
 
-    @JsonProperty("photographers_tags")
-    @Schema(description = "Tags for photographers who contributed product images")
-    private String[] photographersTags;
-
-    @JsonProperty("pnns_groups_1")
-    @Schema(description = "Primary PNNS group for the product")
-    private String pnnsGroups1;
-
-    @JsonProperty("pnns_groups_2")
-    @Schema(description = "Secondary PNNS group for the product")
-    private String pnnsGroups2;
-
-    @JsonProperty("pnns_groups_1_tags")
-    @Schema(description = "Tags for the primary PNNS group")
-    private String[] pnnsGroups1Tags;
-
-    @JsonProperty("pnns_groups_2_tags")
-    @Schema(description = "Tags for the secondary PNNS group")
-    private String[] pnnsGroups2Tags;
-
-    @JsonProperty("popularity_key")
+    @JsonProperty("popularityKey")
     @Schema(description = "Key indicating the product's popularity")
     private long popularityKey;
 
-    @JsonProperty("producer_version_id")
+    @JsonProperty("producerVersionId")
     @Schema(description = "ID of the producer version")
     private String producerVersionId;
 
-    @JsonProperty("product_name")
+    @JsonProperty("productName")
     @Schema(description = "Name of the product")
     private String productName;
 
-    @JsonProperty("product_quantity")
+    @JsonProperty("productQuantity")
     @Schema(description = "Quantity of the product")
     private String productQuantity;
 
-    @JsonProperty("purchase_places")
+    @JsonProperty("purchasePlaces")
     @Schema(description = "Places where the product can be purchased")
     private String purchasePlaces;
 
-    @JsonProperty("purchase_places_debug_tags")
+    @JsonProperty("purchasePlacesDebugTags")
     @Schema(description = "Debug tags for purchase places")
     private String[] purchasePlacesDebugTags;
 
-    @JsonProperty("purchase_places_tags")
+    @JsonProperty("purchasePlacesTags")
     @Schema(description = "Tags for purchase places")
     private String[] purchasePlacesTags;
 
-    @JsonProperty("quality_tags")
+    @JsonProperty("qualityTags")
     @Schema(description = "Tags related to the product's quality")
     private String[] qualityTags;
 
+    @JsonProperty("quantity")
     @Schema(description = "Quantity of the product")
     private String quantity;
 
-    @JsonProperty("quantity_debug_tags")
+    @JsonProperty("quantityDebugTags")
     @Schema(description = "Debug tags for the product quantity")
     private String[] quantityDebugTags;
 
-    @JsonProperty("recycling_instructions_to_discard")
+    @JsonProperty("recyclingInstructionsToDiscard")
     @Schema(description = "Instructions for discarding packaging for recycling purposes")
     private String recyclingInstructionsToDiscard;
 
@@ -627,19 +462,19 @@ public class Product {
     @Schema(description = "Revision number of the product entry")
     private int rev;
 
-    @JsonProperty("serving_quantity")
+    @JsonProperty("servingQuantity")
     @Schema(description = "Quantity per serving of the product")
     private String servingQuantity;
 
-    @JsonProperty("serving_size")
+    @JsonProperty("servingSize")
     @Schema(description = "Size of a single serving of the product")
     private String servingSize;
 
-    @JsonProperty("serving_size_debug_tags")
+    @JsonProperty("servingSizeDebugTags")
     @Schema(description = "Debug tags for serving size")
     private String[] servingSizeDebugTags;
 
-    @JsonProperty("sortkey")
+    @JsonProperty("sortKey")
     @Schema(description = "Sorting key for the product")
     private long sortKey;
 
@@ -647,70 +482,98 @@ public class Product {
     @Schema(description = "States of the product in the production chain")
     private String states;
 
-    @JsonProperty("states_hierarchy")
+    @JsonProperty("statesHierarchy")
     @Schema(description = "Hierarchy of states the product goes through")
     private String[] statesHierarchy;
 
-    @JsonProperty("states_tags")
+    @JsonProperty("statesTags")
     @Schema(description = "Tags for the product states")
     private String[] statesTags;
 
+    @JsonProperty("stores")
     @Schema(description = "Stores where the product is available")
     private String stores;
 
-    @JsonProperty("stores_debug_tags")
+    @JsonProperty("storesDebugTags")
     @Schema(description = "Debug tags for stores")
     private String[] storesDebugTags;
 
-    @JsonProperty("stores_tags")
+    @JsonProperty("storesTags")
     @Schema(description = "Tags for stores selling the product")
     private String[] storesTags;
 
+    @JsonProperty("traces")
     @Schema(description = "Traces of allergens or cross-contamination")
     private String traces;
 
-    @JsonProperty("traces_from_ingredients")
+    @JsonProperty("tracesFromIngredients")
     @Schema(description = "Traces from ingredients potentially causing allergies or intolerances")
     private String tracesFromIngredients;
 
-    @JsonProperty("traces_hierarchy")
+    @JsonProperty("tracesHierarchy")
     @Schema(description = "Hierarchy of traces")
     private String[] tracesHierarchy;
 
-    @JsonProperty("traces_debug_tags")
+    @JsonProperty("tracesDebugTags")
     @Schema(description = "Debug tags for traces")
     private String[] tracesDebugTags;
 
-    @JsonProperty("traces_from_user")
+    @JsonProperty("tracesFromUser")
     @Schema(description = "Traces reported by the user")
     private String tracesFromUser;
 
-    @JsonProperty("traces_lc")
+    @JsonProperty("tracesLc")
     @Schema(description = "Language code for traces")
     private String tracesLc;
 
-    @JsonProperty("traces_tags")
+    @JsonProperty("tracesTags")
     @Schema(description = "Tags for traces")
     private String[] tracesTags;
 
-    @JsonProperty("unknown_ingredients_n")
+    @JsonProperty("unknownIngredientsN")
     @Schema(description = "Number of unknown ingredients")
     private int unknownIngredientsN;
 
-    @JsonProperty("unknown_nutrients_tags")
+    @JsonProperty("unknownNutrientsTags")
     @Schema(description = "Tags for unknown nutrients")
     private String[] unknownNutrientsTags;
 
-    @JsonProperty("update_key")
+    @JsonProperty("updateKey")
     @Schema(description = "Key for the last update made to the product")
     private String updateKey;
 
-    @JsonProperty("vitamins_prev_tags")
+    @JsonProperty("vitaminsPrevTags")
     @Schema(description = "Previous tags for vitamins")
     private String[] vitaminsPrevTags;
 
-    @JsonProperty("vitamins_tags")
+    @JsonProperty("vitaminsTags")
     @Schema(description = "Tags for vitamins")
     private String[] vitaminsTags;
+
+    @JsonProperty("additives")
+    public void setAdditives(Additive additive) {
+        this.additive = new Additive(
+                additivesN,
+                additivesOldN,
+                additivesOriginalTags,
+                additivesOldTags,
+                additivesPrevOriginalTags,
+                additivesDebugTags,
+                additivesTags
+        );
+    }
+
+    @JsonProperty("allergens")
+    public void setAllergens(Allergen allergen) {
+        this.allergen = new Allergen(
+                traces,
+                allergens,
+                allergensFromIngredients,
+                allergensFromUser,
+                allergensHierarchy,
+                allergensLc,
+                allergensTags
+        );
+    }
 
 }
