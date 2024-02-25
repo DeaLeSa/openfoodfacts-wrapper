@@ -1,9 +1,10 @@
-package fr.dlesaout.openfoodfactswrapper.model;
+package fr.dlesaout.openfoodfactswrapper.model.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import fr.dlesaout.openfoodfactswrapper.model.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.Getter;
@@ -18,64 +19,62 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonTypeName("Product")
-@Schema(name = "Product", description = "Represents a product with detailed information.")
-public class Product {
+@JsonTypeName("ProductResource")
+@Schema(name = "ProductResource", description = "Represents a product with detailed information.")
+public class ProductResource {
 
     @Schema(description = "Image of the product")
     private Image image;
 
     @Schema(description = "List of ingredients in the product")
-    private List<Ingredient> ingredients;
+    private List<IngredientResource> ingredients;
 
-    @JsonProperty("nutriments")
     @Schema(description = "List of nutriments in the product")
-    private Nutriment nutriments;
+    private List<NutrimentResource> nutriments;
 
-    @JsonProperty("languagesCodes")
+    @JsonProperty("languages_codes")
     @Schema(description = "Language codes available for the product")
-    private LanguageCode languageCode;
+    private LanguageCodeResource languageCode;
 
-    @JsonProperty("nutrientLevels")
+    @JsonProperty("nutrient_levels")
     @Schema(description = "Nutrient levels of the product")
-    private NutrientLevel nutrientLevels;
+    private NutrientLevelResource nutrientLevels;
 
-    @JsonProperty("selectedImages")
+    @Schema(description = "Nutritional information of the product")
+    private List<NutrimentResource> nutriment;
+
+    @JsonProperty("selected_images")
     @Schema(description = "Selected images of the product")
     private SelectedImage selectedImages;
 
     @Schema(description = "Sources of the product information")
     private Source[] sources;
 
-    @JsonProperty("additives")
-    @Schema(description = "Additives")
-    private Additive additives;
-
-    @JsonProperty("additivesN")
+    @JsonProperty("additives_n")
     @Schema(description = "Number of additives")
     private int additivesN;
 
-    @JsonProperty("additivesOldN")
+    @JsonProperty("additives_old_n")
     @Schema(description = "Old number of additives")
     private int additivesOldN;
 
-    @JsonProperty("additivesOriginalTags")
+    @JsonProperty("additives_original_tags")
     @Schema(description = "Original tags for additives")
     private String[] additivesOriginalTags;
 
-    @JsonProperty("additivesOldTags")
+    @JsonProperty("additives_old_tags")
     @Schema(description = "Old tags for additives")
     private String[] additivesOldTags;
 
-    @JsonProperty("additivesPrevOriginalTags")
+    @JsonProperty("additives_prev_original_tags")
     @Schema(description = "Previous original tags for additives")
     private String[] additivesPrevOriginalTags;
 
-    @JsonProperty("additivesDebugTags")
+    @JsonProperty("additives_debug_tags")
     @Schema(description = "Debug tags for additives")
     private String[] additivesDebugTags;
 
-    @JsonProperty("additivesTags")
+    @JsonProperty("additives_tags")
     @Schema(description = "Tags for additives")
     private String[] additivesTags;
 
@@ -639,7 +638,7 @@ public class Product {
     @Schema(description = "Debug tags for serving size")
     private String[] servingSizeDebugTags;
 
-    @JsonProperty("sortkey")
+    @JsonProperty("sort_key")
     @Schema(description = "Sorting key for the product")
     private long sortKey;
 

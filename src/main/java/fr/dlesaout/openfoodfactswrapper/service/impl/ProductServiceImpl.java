@@ -1,15 +1,19 @@
 package fr.dlesaout.openfoodfactswrapper.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.dlesaout.openfoodfactswrapper.model.Product;
-import fr.dlesaout.openfoodfactswrapper.model.ProductList;
-import fr.dlesaout.openfoodfactswrapper.model.ProductResponse;
+import fr.dlesaout.openfoodfactswrapper.model.*;
+import fr.dlesaout.openfoodfactswrapper.model.resource.IngredientResource;
+import fr.dlesaout.openfoodfactswrapper.model.resource.ProductResponseResource;
 import fr.dlesaout.openfoodfactswrapper.service.ProductService;
 import fr.dlesaout.openfoodfactswrapper.util.ApiUrls;
+import fr.dlesaout.openfoodfactswrapper.util.Attributes;
 import fr.dlesaout.openfoodfactswrapper.util.HttpHeadersUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,9 +25,12 @@ import java.util.Map;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private final ModelMapper modelMapper;
+
     private final RestTemplate restTemplate;
 
-    public ProductServiceImpl(RestTemplate restTemplate) {
+    public ProductServiceImpl(ModelMapper modelMapper, RestTemplate restTemplate) {
+        this.modelMapper = modelMapper;
         this.restTemplate = restTemplate;
     }
 
@@ -33,15 +40,19 @@ public class ProductServiceImpl implements ProductService {
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
         String url = String.format(ApiUrls.PRODUCT_BY_CODE.url, code);
-        return restTemplate.exchange(url, HttpMethod.GET, requestEntity, ProductResponse.class).getBody();
+        ProductResponseResource response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ProductResponseResource.class).getBody();
+        ProductResponse productResponse = modelMapper.map(response, ProductResponse.class);
+        productResponse.getProduct().setAdditives(new Additive());
+        productResponse.getProduct().setAllergens(new Allergen());
+        return productResponse;
     }
 
     @Override
-    public ProductList fetchProducts(String nutriscore, String category, String brand, Integer page) {
+    public ProductList fetchProducts(String nutriscore, String category, String brand, List<String> fields, Integer page) {
         HttpHeaders headers = HttpHeadersUtil.createHttpHeaders();
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-        String url = buildUrl(nutriscore, category, brand, page);
+        String url = buildUrl(nutriscore, category, brand, fields, page);
 
         ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
                 url,
@@ -51,15 +62,16 @@ public class ProductServiceImpl implements ProductService {
                 }
         );
 
-        return processResponse(responseEntity);
+        return processResponse(responseEntity, fields);
     }
 
-    private String buildUrl(String nutriscore, String category, String brand, Integer page) {
+    private String buildUrl(String nutriscore, String category, String brand, List<String> fields, Integer page) {
         StringBuilder urlBuilder = new StringBuilder(ApiUrls.BASE_SEARCH.url);
-        appendQueryParam(urlBuilder, "nutrition_grades_tags", nutriscore);
-        appendQueryParam(urlBuilder, "categories_tags", category);
-        appendQueryParam(urlBuilder, "brands_tags", brand);
-        urlBuilder.append("page=").append(page != null ? page : 1).append("&json=true");
+        appendQueryParam(urlBuilder, Attributes.NUTRITION_GRADES_TAGS.getAttribute(), nutriscore);
+        appendQueryParam(urlBuilder, Attributes.CATEGORIES_TAGS.getAttribute(), category);
+        appendQueryParam(urlBuilder, Attributes.BRANDS_TAGS.getAttribute(), brand);
+        appendQueryParam(urlBuilder, Attributes.FIELDS.getAttribute(), fields);
+        urlBuilder.append(Attributes.PAGE.getAttribute()).append("=").append(page != null ? page : 1).append("&json=true");
 
         return urlBuilder.toString();
     }
@@ -70,21 +82,93 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private ProductList processResponse(ResponseEntity<Map<String, Object>> responseEntity) {
-        List<Product> productsInProductList = new ArrayList<>();
-        if (responseEntity.getBody() != null) {
-            List<Map<String, Object>> products = (List<Map<String, Object>>) responseEntity.getBody().get("products");
-            if (products != null) {
-                ObjectMapper objectMapper = new ObjectMapper();
-                products.forEach(productMap ->
-                        productsInProductList.add(objectMapper.convertValue(productMap, Product.class))
-                );
+    private void appendQueryParam(StringBuilder urlBuilder, String param, List<String> values) {
+        if (values != null && !values.isEmpty()) {
+            String value = String.join(",", values);
+            urlBuilder.append(param).append("=").append(value).append("&");
+        }
+    }
+
+    private ProductList processResponse(ResponseEntity<Map<String, Object>> responseEntity, List<String> fields) {
+        List<Product> productList = new ArrayList<>();
+        Map<String, Object> body = responseEntity.getBody();
+
+        if (body != null && !body.isEmpty()) {
+            Object productListObj = body.get(Attributes.PRODUCTS.getAttribute());
+            if (productListObj instanceof List) {
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> tempList = (List<Map<String, Object>>) productListObj;
+                tempList.forEach(productMap -> {
+                    Product product = modelMapper.map(productMap, Product.class);
+
+                    // Handle ingredients
+                    Object ingredientsObj = productMap.get("ingredients");
+                    List<Ingredient> ingredientList = handleObject(ingredientsObj, IngredientResource.class, Ingredient.class);
+                    product.setIngredients(ingredientList);
+
+                    // Handle nutriments
+                    Object nutrimentsObj = productMap.get("nutriments");
+                    Nutriment nutriment = modelMapper.map(nutrimentsObj, Nutriment.class);
+                    product.setNutriments(nutriment);
+
+                    // Handle additives
+                    Additive additive = new Additive();
+                    product.setAdditives(additive);
+
+                    productList.add(product);
+                });
             }
         }
 
-        ProductList productList = new ProductList();
-        productList.setProducts(productsInProductList);
-        return productList;
+        ProductList response = new ProductList();
+        response.setPaginationInfo(handlePaginationInfo(body));
+        response.setProducts(productList);
+
+        return response;
+    }
+
+    private PaginationInfo handlePaginationInfo(Map<String, Object> body) {
+        int numberOfProducts = 0;
+        int pageNumber = 0;
+        int numberOfItemsInSelectedPage = 0;
+        int numberMaxOfItemsPerPage = 0;
+
+        if (body != null && !body.isEmpty()) {
+            numberOfProducts = Integer.parseInt(body.get(Attributes.COUNT.getAttribute()).toString());
+            pageNumber = Integer.parseInt(body.get(Attributes.PAGE.getAttribute()).toString());
+            numberOfItemsInSelectedPage = Integer.parseInt(body.get(Attributes.PAGE_COUNT.getAttribute()).toString());
+            numberMaxOfItemsPerPage = Integer.parseInt(body.get(Attributes.PAGE_SIZE.getAttribute()).toString());
+        }
+
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCount(numberOfProducts);
+        paginationInfo.setPage(pageNumber);
+        paginationInfo.setPageCount(numberOfItemsInSelectedPage);
+        paginationInfo.setPageSize(numberMaxOfItemsPerPage);
+
+        return paginationInfo;
+    }
+
+    private <T, R> List<T> handleObject(Object obj, Class<R> resourceClass, Class<T> targetClass) {
+        List<T> resultList = new ArrayList<>();
+
+        if (obj instanceof List) {
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> objList = (List<Map<String, Object>>) obj;
+            for (Map<String, Object> objMap : objList) {
+                R resourceObj = modelMapper.map(objMap, resourceClass);
+                T targetObj = modelMapper.map(resourceObj, targetClass);
+                resultList.add(targetObj);
+            }
+        } else if (obj instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> objMap = (Map<String, Object>) obj;
+            R resourceObj = modelMapper.map(objMap, resourceClass);
+            T targetObj = modelMapper.map(resourceObj, targetClass);
+            resultList.add(targetObj);
+        }
+
+        return resultList;
     }
 
 

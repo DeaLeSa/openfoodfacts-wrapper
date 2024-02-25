@@ -18,7 +18,7 @@ public class ProductResponse {
   @Valid
   @Schema(description = "Product details", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("product")
-  private Product product;
+  private ProductItem product;
 
   @Schema(description = "The unique code identifying the product.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("code")

@@ -1,7 +1,6 @@
-package fr.dlesaout.openfoodfactswrapper.model;
+package fr.dlesaout.openfoodfactswrapper.model.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,19 +8,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Ingredient")
-@JsonTypeName("Ingredient")
+@Schema(description = "IngredientResource")
+@JsonTypeName("IngredientResource")
 @Data
 @NoArgsConstructor
-public class Ingredient {
+public class IngredientResource {
 
     @Schema(description = "The ciqual proxy food score of the ingredient.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    @JsonProperty("ciqualProxyFoodScore")
+    @JsonProperty("ciqual_proxy_food_code")
     private String ciqualProxyFoodScore;
 
     @Schema(description = "Indicates if the ingredient is from palm oil.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    @JsonProperty("fromPalmOil")
+    @JsonProperty("from_palm_oil")
     private String fromPalmOil;
 
     @Schema(description = "The unique identifier for the ingredient.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
