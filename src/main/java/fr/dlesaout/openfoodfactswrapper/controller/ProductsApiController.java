@@ -22,8 +22,8 @@ public class ProductsApiController implements ProductsApi {
     }
 
     @Override
-    public ResponseEntity<ProductResponse> fetchProductByCode(String code) {
-        return ResponseEntity.ok(productService.fetchProductByCode(code));
+    public ResponseEntity<ProductResponse> fetchProductByCode(String code, List<String> fields) {
+        return ResponseEntity.ok(productService.fetchProductByCode(code, fields));
     }
 
     @Override

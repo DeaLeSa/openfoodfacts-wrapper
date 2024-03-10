@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Accessors(chain = true)
 @JsonTypeName("Additive")
 @Schema(description = "Additive")
 @Data
@@ -19,6 +21,10 @@ public class Additive {
     @Schema(description = "The number of additives", example = "0")
     @JsonProperty("additivesN")
     private int additivesN;
+
+    @Schema(description = "New count of additives", example = "4")
+    @JsonProperty("additivesNewN")
+    private int additivesNewN;
 
     @Schema(description = "Old count of additives", example = "4")
     @JsonProperty("additivesOldN")

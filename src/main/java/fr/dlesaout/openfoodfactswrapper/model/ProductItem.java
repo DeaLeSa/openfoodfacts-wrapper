@@ -55,6 +55,10 @@ public class ProductItem {
     private int additivesN;
 
     @JsonIgnore
+    @Schema(description = "New number of additives")
+    private int additivesNewN;
+
+    @JsonIgnore
     @Schema(description = "Old number of additives")
     private int additivesOldN;
 
@@ -554,6 +558,7 @@ public class ProductItem {
     public void setAdditives(Additive additive) {
         this.additive = new Additive(
                 additivesN,
+                additivesNewN,
                 additivesOldN,
                 additivesOriginalTags,
                 additivesOldTags,
@@ -569,7 +574,6 @@ public class ProductItem {
                 traces,
                 allergens,
                 allergensFromIngredients,
-                allergensFromUser,
                 allergensHierarchy,
                 allergensLc,
                 allergensTags

@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Accessors(chain = true)
 @JsonTypeName("Allergen")
 @Schema(description = "Allergen")
 @Data
@@ -27,10 +29,6 @@ public class Allergen {
     @JsonProperty("allergensFromIngredients")
     @Schema(description = "Allergens from ingredients")
     private String allergensFromIngredients;
-
-    @JsonProperty("allergensFromUser")
-    @Schema(description = "Allergens reported by the user")
-    private String allergensFromUser;
 
     @JsonProperty("allergensHierarchy")
     @Schema(description = "Hierarchy of allergens")

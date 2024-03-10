@@ -16,6 +16,6 @@ public class ProductList {
 
     private PaginationInfo paginationInfo;
 
-    private List<Product> products;
+    private List<ProductResponse> products;
 
 }
