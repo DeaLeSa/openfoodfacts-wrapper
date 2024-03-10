@@ -1,7 +1,6 @@
 package fr.dlesaout.openfoodfactswrapper.service.impl;
 
 import fr.dlesaout.openfoodfactswrapper.model.*;
-import fr.dlesaout.openfoodfactswrapper.model.resource.IngredientResource;
 import fr.dlesaout.openfoodfactswrapper.model.resource.ProductResponseResource;
 import fr.dlesaout.openfoodfactswrapper.service.ProductService;
 import fr.dlesaout.openfoodfactswrapper.util.ApiUrls;
@@ -35,16 +34,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse fetchProductByCode(String code) {
+    public ProductResponse fetchProductByCode(String code, List<String> fields) {
         HttpHeaders headers = HttpHeadersUtil.createHttpHeaders();
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-        String url = String.format(ApiUrls.PRODUCT_BY_CODE.url, code);
-        ProductResponseResource response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ProductResponseResource.class).getBody();
-        ProductResponse productResponse = modelMapper.map(response, ProductResponse.class);
-        productResponse.getProduct().setAdditives(new Additive());
-        productResponse.getProduct().setAllergens(new Allergen());
-        return productResponse;
+        StringBuilder urlBuilder = new StringBuilder(String.format(ApiUrls.PRODUCT_BY_CODE.url, code));
+        if (fields != null && !fields.isEmpty()) {
+            appendQueryParam(urlBuilder, "fields", fields);
+        }
+        ProductResponseResource response = restTemplate.exchange(urlBuilder.toString(), HttpMethod.GET, requestEntity, ProductResponseResource.class).getBody();
+        return modelMapper.map(response, ProductResponse.class);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
         HttpHeaders headers = HttpHeadersUtil.createHttpHeaders();
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-        String url = buildUrl(nutriscore, category, brand, fields, page);
+        String url = buildUrlForSearch(nutriscore, category, brand, fields, page);
 
         ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
                 url,
@@ -65,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
         return processResponse(responseEntity, fields);
     }
 
-    private String buildUrl(String nutriscore, String category, String brand, List<String> fields, Integer page) {
+    private String buildUrlForSearch(String nutriscore, String category, String brand, List<String> fields, Integer page) {
         StringBuilder urlBuilder = new StringBuilder(ApiUrls.BASE_SEARCH.url);
         appendQueryParam(urlBuilder, Attributes.NUTRITION_GRADES_TAGS.getAttribute(), nutriscore);
         appendQueryParam(urlBuilder, Attributes.CATEGORIES_TAGS.getAttribute(), category);
@@ -90,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private ProductList processResponse(ResponseEntity<Map<String, Object>> responseEntity, List<String> fields) {
-        List<Product> productList = new ArrayList<>();
+        List<ProductResponse> productList = new ArrayList<>();
         Map<String, Object> body = responseEntity.getBody();
 
         if (body != null && !body.isEmpty()) {
@@ -98,25 +97,11 @@ public class ProductServiceImpl implements ProductService {
             if (productListObj instanceof List) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tempList = (List<Map<String, Object>>) productListObj;
-                tempList.forEach(productMap -> {
-                    Product product = modelMapper.map(productMap, Product.class);
-
-                    // Handle ingredients
-                    Object ingredientsObj = productMap.get("ingredients");
-                    List<Ingredient> ingredientList = handleObject(ingredientsObj, IngredientResource.class, Ingredient.class);
-                    product.setIngredients(ingredientList);
-
-                    // Handle nutriments
-                    Object nutrimentsObj = productMap.get("nutriments");
-                    Nutriment nutriment = modelMapper.map(nutrimentsObj, Nutriment.class);
-                    product.setNutriments(nutriment);
-
-                    // Handle additives
-                    Additive additive = new Additive();
-                    product.setAdditives(additive);
-
-                    productList.add(product);
-                });
+                List<ProductResponse> collectedResponses = tempList.parallelStream()
+                        .filter(productMap -> productMap.containsKey("code"))
+                        .map(productMap -> fetchProductByCode((String) productMap.get("code"), fields))
+                        .toList();
+                productList.addAll(collectedResponses);
             }
         }
 
@@ -148,28 +133,5 @@ public class ProductServiceImpl implements ProductService {
 
         return paginationInfo;
     }
-
-    private <T, R> List<T> handleObject(Object obj, Class<R> resourceClass, Class<T> targetClass) {
-        List<T> resultList = new ArrayList<>();
-
-        if (obj instanceof List) {
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> objList = (List<Map<String, Object>>) obj;
-            for (Map<String, Object> objMap : objList) {
-                R resourceObj = modelMapper.map(objMap, resourceClass);
-                T targetObj = modelMapper.map(resourceObj, targetClass);
-                resultList.add(targetObj);
-            }
-        } else if (obj instanceof Map) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> objMap = (Map<String, Object>) obj;
-            R resourceObj = modelMapper.map(objMap, resourceClass);
-            T targetObj = modelMapper.map(resourceObj, targetClass);
-            resultList.add(targetObj);
-        }
-
-        return resultList;
-    }
-
 
 }

@@ -8,12 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeName("AllergenResource")
-@Schema(description = "AllergenResource")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeName("AllergenResource")
+@Schema(description = "AllergenResource")
 public class AllergenResource {
 
     @JsonProperty("traces")
@@ -27,10 +27,6 @@ public class AllergenResource {
     @JsonProperty("allergens_from_ingredients")
     @Schema(description = "Allergens from ingredients")
     private String allergensFromIngredients;
-
-    @JsonProperty("allergens_from_user")
-    @Schema(description = "Allergens reported by the user")
-    private String allergensFromUser;
 
     @JsonProperty("allergens_hierarchy")
     @Schema(description = "Hierarchy of allergens")

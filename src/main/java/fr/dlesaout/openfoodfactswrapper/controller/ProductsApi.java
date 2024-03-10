@@ -36,7 +36,9 @@ public interface ProductsApi {
                                     schema = @Schema(implementation = Error.class)))
             })
     @GetMapping(value = "/products/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
-    default ResponseEntity<ProductResponse> fetchProductByCode(@PathVariable("code") String code) {
+    default ResponseEntity<ProductResponse> fetchProductByCode(
+            @PathVariable("code") String code,
+            @RequestParam(value = "fields", required = false) List<String> fields) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 

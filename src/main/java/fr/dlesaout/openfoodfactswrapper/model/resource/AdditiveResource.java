@@ -16,32 +16,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AdditiveResource {
 
-    @Schema(description = "The number of additives", example = "0")
-    @JsonProperty("additives_n")
+    @JsonProperty("products.additives_n")
     private int additivesN;
 
-    @Schema(description = "Old count of additives", example = "4")
-    @JsonProperty("additives_old_n")
+    @JsonProperty("products.new_additives_n")
+    private int additivesNewN;
     private int additivesOldN;
-
-    @Schema(description = "Original tags for additives")
-    @JsonProperty("additives_original_tags")
     private String[] additivesOriginalTags;
-
-    @Schema(description = "Old tags for additives")
-    @JsonProperty("additives_old_tags")
     private String[] additivesOldTags;
-
-    @Schema(description = "Previous original tags for additives")
-    @JsonProperty("additives_prev_original_tags")
     private String[] additivesPrevOriginalTags;
-
-    @Schema(description = "Debug tags for additives")
-    @JsonProperty("additives_debug_tags")
     private String[] additivesDebugTags;
-
-    @Schema(description = "Current tags for additives")
-    @JsonProperty("additives_tags")
     private String[] additivesTags;
 
 }
