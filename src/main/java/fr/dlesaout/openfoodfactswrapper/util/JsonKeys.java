@@ -5,6 +5,9 @@ public class JsonKeys {
     private JsonKeys() {
     }
 
+    // Code
+    public static final String CODE = "code";
+
     // Images
     public static final String SELECTED_IMAGES = "selected_images";
     public static final String FRONT = "front";

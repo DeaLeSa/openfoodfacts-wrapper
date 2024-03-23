@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 
 @Tag(name = "products", description = "the products API")
 public interface ProductsApi {
@@ -37,8 +35,7 @@ public interface ProductsApi {
             })
     @GetMapping(value = "/products/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
     default ResponseEntity<ProductResponse> fetchProductByCode(
-            @PathVariable("code") String code,
-            @RequestParam(value = "fields", required = false) List<String> fields) {
+            @PathVariable("code") String code) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
@@ -56,7 +53,6 @@ public interface ProductsApi {
             @RequestParam(value = "nutriscore", required = false) String nutriscore,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "brand", required = false) String brand,
-            @RequestParam(value = "fields", required = false) List<String> fields,
             @RequestParam(value = "page", required = false) Integer page) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
