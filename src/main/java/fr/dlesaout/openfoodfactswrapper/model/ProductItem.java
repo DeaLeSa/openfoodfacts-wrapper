@@ -3,6 +3,7 @@ package fr.dlesaout.openfoodfactswrapper.model;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import fr.dlesaout.openfoodfactswrapper.model.deserializer.ProductItemDeserializer;
+import fr.dlesaout.openfoodfactswrapper.model.ecoscore.EcoScore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.Getter;
@@ -43,6 +44,10 @@ public class ProductItem {
     @JsonProperty("countries")
     @Schema(description = "Countries where the product is available")
     private Country countries;
+
+    @JsonProperty("ecoScore")
+    @Schema(description = "Eco-score of the product")
+    private EcoScore ecoScore;
 
     @JsonProperty("languagesCodes")
     @Schema(description = "Language codes available for the product")
@@ -297,6 +302,10 @@ public class ProductItem {
     @JsonProperty("producerVersionId")
     @Schema(description = "ID of the producer version")
     private String producerVersionId;
+
+    @JsonProperty("brands")
+    @Schema(description = "Brands of the product")
+    private String brands;
 
     @JsonProperty("productName")
     @Schema(description = "Name of the product")

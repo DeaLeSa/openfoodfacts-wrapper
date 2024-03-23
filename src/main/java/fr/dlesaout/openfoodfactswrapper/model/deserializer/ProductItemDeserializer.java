@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import fr.dlesaout.openfoodfactswrapper.model.*;
+import fr.dlesaout.openfoodfactswrapper.model.ecoscore.*;
 import fr.dlesaout.openfoodfactswrapper.util.JsonKeys;
 
 import java.io.IOException;
@@ -25,19 +26,20 @@ public class ProductItemDeserializer extends StdDeserializer<ProductItem> {
         ProductItem productItem = new ProductItem();
         parseImage(productItem, node);
 
-        productItem.setProductName(getStringValue(node));
-
+        productItem.setProductName(getStringValue(node, JsonKeys.PRODUCT_NAME));
+        productItem.setBrands(getStringValue(node, JsonKeys.BRANDS));
         productItem.setIngredients(parseIngredients(node.get(JsonKeys.INGREDIENTS)));
         productItem.setAdditives(parseAdditive(node));
         productItem.setAllergenicSubstances(parseAllergen(node));
         productItem.setNutrients(parseNutrient(node.get(JsonKeys.NUTRIENTS)));
         productItem.setCountries(parseCountry(node));
+        productItem.setEcoScore(parseEcoScore(node.get(JsonKeys.ECOSCORE)));
 
         return productItem;
     }
 
-    private String getStringValue(JsonNode parentNode) {
-        return parentNode.has(JsonKeys.PRODUCT_NAME) ? parentNode.get(JsonKeys.PRODUCT_NAME).asText() : null;
+    private String getStringValue(JsonNode parentNode, String jsonKey) {
+        return parentNode.has(jsonKey) ? parentNode.get(jsonKey).asText() : null;
     }
 
     private List<String> asStringList(JsonNode arrayNode) {
@@ -215,6 +217,85 @@ public class ProductItemDeserializer extends StdDeserializer<ProductItem> {
         setIfPresent(countriesNode, JsonKeys.COUNTRIES_TAGS, value -> country.setCountriesTags(asStringList(value)));
 
         return country;
+    }
+
+    private EcoScore parseEcoScore(JsonNode ecoScoreNode) {
+        EcoScore ecoScoreData = new EcoScore();
+        Adjustment adjustments = new Adjustment();
+
+        setIfPresent(ecoScoreNode, JsonKeys.ECOSCORE_NOT_APPLICABLE_FOR_CATEGORY, value -> ecoScoreData.setEcoscoreNotApplicableForCategory(value.asText()));
+
+        JsonNode adjustmentsNode = ecoScoreNode.path(JsonKeys.ADJUSTMENTS);
+
+        setIfPresent(adjustmentsNode, JsonKeys.ORIGINS_OF_INGREDIENTS, originsNode -> {
+            OriginIngredient origins = new OriginIngredient();
+            setIfPresent(originsNode, JsonKeys.EPI_SCORE, value -> origins.setEpiScore(value.asInt()));
+            setIfPresent(originsNode, JsonKeys.EPI_VALUE, value -> origins.setEpiValue(value.asInt()));
+            setIfPresent(originsNode, JsonKeys.TRANSPORTATION_SCORE, value -> origins.setTransportationScore(value.asInt()));
+            setIfPresent(originsNode, JsonKeys.VALUE, value -> origins.setValue(value.asInt()));
+
+            if (originsNode.has(JsonKeys.AGGREGATED_ORIGINS)) {
+                List<AggregatedOrigin> aggregatedOrigins = new ArrayList<>();
+                originsNode.path(JsonKeys.AGGREGATED_ORIGINS).forEach(itemNode -> {
+                    AggregatedOrigin origin = new AggregatedOrigin();
+                    setIfPresent(itemNode, JsonKeys.EPI_SCORE, node -> origin.setEpiScore(node.asText()));
+                    setIfPresent(itemNode, JsonKeys.ORIGIN, node -> origin.setOrigin(node.asText()));
+                    setIfPresent(itemNode, JsonKeys.PERCENT, node -> origin.setPercent(node.asInt()));
+                    setIfPresent(itemNode, JsonKeys.TRANSPORTATION_SCORE, node -> origin.setTransportationScore(node.asText()));
+                    aggregatedOrigins.add(origin);
+                });
+                origins.setAggregatedOrigins(aggregatedOrigins);
+            }
+
+            adjustments.setOriginsOfIngredients(origins);
+        });
+
+        setIfPresent(adjustmentsNode, JsonKeys.PACKAGING, packagingNode -> {
+            Packaging packaging = new Packaging();
+            setIfPresent(packagingNode, JsonKeys.SCORE, value -> packaging.setPackagingScore(value.asInt()));
+            setIfPresent(packagingNode, JsonKeys.VALUE, value -> packaging.setPackagingValue(value.asInt()));
+            setIfPresent(packagingNode, JsonKeys.NON_RECYCLABLE_AND_NON_BIODEGRADABLE_MATERIALS, value -> packaging.setNonRecyclableAndNonBiodegradableMaterials(value.asInt()));
+            setIfPresent(packagingNode, JsonKeys.WARNING, value -> packaging.setPackagingWarning(value.asText()));
+
+            if (packagingNode.has(JsonKeys.PACKAGINGS)) {
+                List<PackagingItem> packagingItems = new ArrayList<>();
+                packagingNode.path(JsonKeys.PACKAGINGS).forEach(packagingItemNode -> {
+                    PackagingItem item = new PackagingItem();
+                    setIfPresent(packagingItemNode, JsonKeys.MATERIAL, value -> item.setMaterial(value.asText()));
+                    setIfPresent(packagingItemNode, JsonKeys.ECOSCORE_MATERIAL_SCORE, value -> item.setEcoscoreMaterialScore(value.asInt()));
+                    setIfPresent(packagingItemNode, JsonKeys.ECOSCORE_SHAPE_RATIO, value -> item.setEcoscoreShapeRatio(value.asDouble()));
+                    setIfPresent(packagingItemNode, JsonKeys.NUMBER_OF_UNITS, value -> item.setNumberOfUnits(value.asInt()));
+                    setIfPresent(packagingItemNode, JsonKeys.QUANTITY_PER_UNIT, value -> item.setQuantityPerUnit(value.asText()));
+                    setIfPresent(packagingItemNode, JsonKeys.SHAPE, value -> item.setShape(value.asText()));
+                    setIfPresent(packagingItemNode, JsonKeys.WEIGHT_MEASURED, value -> item.setWeightMeasured(value.asDouble()));
+                    packagingItems.add(item);
+                });
+                packaging.setPackagings(packagingItems);
+            }
+
+            adjustments.setPackaging(packaging);
+        });
+
+        setIfPresent(adjustmentsNode, JsonKeys.PRODUCTION_SYSTEM, productionSystemNode -> {
+            ProductionSystem productionSystem = new ProductionSystem();
+            setIfPresent(productionSystemNode, JsonKeys.LABELS, value -> productionSystem.setLabels(asStringList(value)));
+            setIfPresent(productionSystemNode, JsonKeys.VALUE, value -> productionSystem.setValue(value.asInt()));
+            setIfPresent(productionSystemNode, JsonKeys.WARNING, value -> productionSystem.setWarning(value.asText()));
+
+            adjustments.setProductionSystem(productionSystem);
+        });
+
+        setIfPresent(adjustmentsNode, JsonKeys.THREATENED_SPECIES, threatenedSpecyNode -> {
+            ThreatenedSpecy threatenedSpecy = new ThreatenedSpecy();
+            setIfPresent(threatenedSpecyNode, JsonKeys.INGREDIENT, value -> threatenedSpecy.setIngredient(value.asText()));
+            setIfPresent(threatenedSpecyNode, JsonKeys.VALUE, value -> threatenedSpecy.setValue(value.asInt()));
+
+            adjustments.setThreatenedSpecies(threatenedSpecy);
+        });
+
+        ecoScoreData.setAdjustments(adjustments);
+
+        return ecoScoreData;
     }
 
     private void setIfPresent(JsonNode parentNode, String key, Consumer<JsonNode> action) {
