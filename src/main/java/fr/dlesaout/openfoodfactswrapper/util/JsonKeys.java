@@ -24,6 +24,7 @@ public class JsonKeys {
 
     // Product Info
     public static final String PRODUCT_NAME = "product_name";
+    public static final String BRANDS = "brands";
 
     // Ingredients
     public static final String INGREDIENTS = "ingredients";
@@ -137,5 +138,38 @@ public class JsonKeys {
     public static final String COUNTRIES_HIERARCHY = "countries_hierarchy";
     public static final String COUNTRIES_LC = "countries_lc";
     public static final String COUNTRIES_TAGS = "countries_tags";
+
+    // EcoScore and Adjustments
+    public static final String ECOSCORE = "ecoscore_data";
+    public static final String ECOSCORE_NOT_APPLICABLE_FOR_CATEGORY = "ecoscore_not_applicable_for_category";
+    public static final String ORIGINS_OF_INGREDIENTS = "origins_of_ingredients";
+    public static final String EPI_SCORE = "epi_score";
+    public static final String EPI_VALUE = "epi_value";
+    public static final String TRANSPORTATION_SCORE = "transportation_score";
+    public static final String VALUE = "value";
+    public static final String AGGREGATED_ORIGINS = "aggregated_origins";
+    public static final String ADJUSTMENTS = "adjustments";
+
+    // Packaging
+    public static final String PACKAGING = "packaging";
+    public static final String SCORE = "score";
+    public static final String NON_RECYCLABLE_AND_NON_BIODEGRADABLE_MATERIALS = "non_recyclable_and_non_biodegradable_materials";
+    public static final String WARNING = "warning";
+    public static final String PACKAGINGS = "packagings";
+    public static final String MATERIAL = "material";
+    public static final String ECOSCORE_MATERIAL_SCORE = "ecoscore_material_score";
+    public static final String ECOSCORE_SHAPE_RATIO = "ecoscore_shape_ratio";
+    public static final String NUMBER_OF_UNITS = "number_of_units";
+    public static final String QUANTITY_PER_UNIT = "quantity_per_unit";
+    public static final String SHAPE = "shape";
+    public static final String WEIGHT_MEASURED = "weight_measured";
+
+    // Production system
+    public static final String PRODUCTION_SYSTEM = "production_system";
+    public static final String LABELS = "labels";
+
+    // Theatened species
+    public static final String THREATENED_SPECIES = "threatened_species";
+    public static final String INGREDIENT = "ingredient";
 
 }
