@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
 @JsonTypeName("Allergen")
@@ -32,7 +34,7 @@ public class Allergen {
 
     @JsonProperty("allergensHierarchy")
     @Schema(description = "Hierarchy of allergens")
-    private String[] allergensHierarchy;
+    private List<String> allergensHierarchy;
 
     @JsonProperty("allergensLc")
     @Schema(description = "Language code for allergens information")
@@ -40,6 +42,6 @@ public class Allergen {
 
     @JsonProperty("allergensTags")
     @Schema(description = "Tags for allergens")
-    private String[] allergensTags;
+    private List<String> allergensTags;
 
 }

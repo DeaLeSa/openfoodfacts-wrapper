@@ -1,13 +1,11 @@
 package fr.dlesaout.openfoodfactswrapper.service.impl;
 
 import fr.dlesaout.openfoodfactswrapper.model.*;
-import fr.dlesaout.openfoodfactswrapper.model.resource.ProductResponseResource;
 import fr.dlesaout.openfoodfactswrapper.service.ProductService;
 import fr.dlesaout.openfoodfactswrapper.util.ApiUrls;
 import fr.dlesaout.openfoodfactswrapper.util.Attributes;
 import fr.dlesaout.openfoodfactswrapper.util.HttpHeadersUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,12 +22,9 @@ import java.util.Map;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ModelMapper modelMapper;
-
     private final RestTemplate restTemplate;
 
-    public ProductServiceImpl(ModelMapper modelMapper, RestTemplate restTemplate) {
-        this.modelMapper = modelMapper;
+    public ProductServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -42,8 +37,8 @@ public class ProductServiceImpl implements ProductService {
         if (fields != null && !fields.isEmpty()) {
             appendQueryParam(urlBuilder, "fields", fields);
         }
-        ProductResponseResource response = restTemplate.exchange(urlBuilder.toString(), HttpMethod.GET, requestEntity, ProductResponseResource.class).getBody();
-        return modelMapper.map(response, ProductResponse.class);
+
+        return restTemplate.exchange(urlBuilder.toString(), HttpMethod.GET, requestEntity, ProductResponse.class).getBody();
     }
 
     @Override

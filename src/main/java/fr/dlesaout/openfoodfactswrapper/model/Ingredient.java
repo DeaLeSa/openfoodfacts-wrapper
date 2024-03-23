@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Ingredient")
@@ -34,7 +36,16 @@ public class Ingredient {
 
     @Schema(description = "The percentage of this ingredient in the product.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @JsonProperty("percent")
-    private String percent;
+    private Double percent;
+
+    @JsonProperty("percentEstimate")
+    private Double percentEstimate;
+
+    @JsonProperty("percentMax")
+    private Double percentMax;
+
+    @JsonProperty("percentMin")
+    private Double percentMin;
 
     @Schema(description = "The rank or order of the ingredient in the product.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @JsonProperty("rank")
@@ -51,5 +62,9 @@ public class Ingredient {
     @Schema(description = "Indicates if the ingredient is vegetarian.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @JsonProperty("vegetarian")
     private String vegetarian;
+
+    @Schema(description = "Sublist of ingredients.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @JsonProperty("ingredients")
+    private List<Ingredient> ingredients;
 
 }

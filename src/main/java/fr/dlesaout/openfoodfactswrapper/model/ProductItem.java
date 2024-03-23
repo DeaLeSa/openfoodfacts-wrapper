@@ -1,15 +1,20 @@
 package fr.dlesaout.openfoodfactswrapper.model;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import fr.dlesaout.openfoodfactswrapper.model.deserializer.ProductItemDeserializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
+@JsonDeserialize(using = ProductItemDeserializer.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Getter
@@ -20,13 +25,24 @@ import java.util.List;
 public class ProductItem {
 
     @Schema(description = "Image of the product")
-    private Image image;
+    private String imageUrl;
 
     @Schema(description = "List of ingredients in the product")
     private List<Ingredient> ingredients;
 
     @Schema(description = "List of nutriments in the product")
-    private Nutriment nutriments;
+    private Nutrient nutrients;
+
+    @Schema(description = "List of additives in the product")
+    private Additive additives;
+
+    @JsonProperty("allergenicSubstances")
+    @Schema(description = "Allergens present in the product")
+    private Allergen allergenicSubstances;
+
+    @JsonProperty("countries")
+    @Schema(description = "Countries where the product is available")
+    private Country countries;
 
     @JsonProperty("languagesCodes")
     @Schema(description = "Language codes available for the product")
@@ -37,102 +53,10 @@ public class ProductItem {
     private NutrientLevel nutrientLevels;
 
     @Schema(description = "Nutritional information of the product")
-    private List<Nutriment> nutriment;
-
-    @JsonProperty("selectedImages")
-    @Schema(description = "Selected images of the product")
-    private SelectedImage selectedImages;
+    private List<Nutrient> nutrient;
 
     @Schema(description = "Sources of the product information")
     private Source[] sources;
-
-    @JsonProperty("additives")
-    @Schema(description = "Additives")
-    private Additive additive;
-
-    @JsonIgnore
-    @Schema(description = "Number of additives")
-    private int additivesN;
-
-    @JsonIgnore
-    @Schema(description = "New number of additives")
-    private int additivesNewN;
-
-    @JsonIgnore
-    @Schema(description = "Old number of additives")
-    private int additivesOldN;
-
-    @JsonIgnore
-    @Schema(description = "Original tags for additives")
-    private String[] additivesOriginalTags;
-
-    @JsonIgnore
-    @Schema(description = "Old tags for additives")
-    private String[] additivesOldTags;
-
-    @JsonIgnore
-    @Schema(description = "Previous original tags for additives")
-    private String[] additivesPrevOriginalTags;
-
-    @JsonIgnore
-    @Schema(description = "Debug tags for additives")
-    private String[] additivesDebugTags;
-
-    @JsonIgnore
-    @Schema(description = "Tags for additives")
-    private String[] additivesTags;
-
-    @JsonProperty("allergenicSubstances")
-    @Schema(description = "Allergens present in the product")
-    private Allergen allergen;
-
-    @JsonIgnore
-    @Schema(description = "Allergens present in the product")
-    private String allergens;
-
-    @JsonIgnore
-    @Schema(description = "Allergens from ingredients")
-    private String allergensFromIngredients;
-
-    @JsonIgnore
-    @Schema(description = "Allergens reported by the user")
-    private String allergensFromUser;
-
-    @JsonIgnore
-    @Schema(description = "Hierarchy of allergens")
-    private String[] allergensHierarchy;
-
-    @JsonIgnore
-    @Schema(description = "Language code for allergens information")
-    private String allergensLc;
-
-    @JsonIgnore
-    @Schema(description = "Tags for allergens")
-    private String[] allergensTags;
-
-    @JsonProperty("countries")
-    @Schema(description = "Countries where the product is available")
-    private String countries;
-
-    @JsonProperty("countriesHierarchy")
-    @Schema(description = "Hierarchy of countries for the product")
-    private String[] countriesHierarchy;
-
-    @JsonProperty("countriesLc")
-    @Schema(description = "Language code for countries information")
-    private String countriesLc;
-
-    @JsonProperty("countriesTags")
-    @Schema(description = "Tags for countries")
-    private String[] countriesTags;
-
-    @JsonProperty("createdT")
-    @Schema(description = "Timestamp of product creation")
-    private long createdT;
-
-    @JsonProperty("creator")
-    @Schema(description = "Creator of the product entry")
-    private String creator;
 
     @JsonProperty("embCodes")
     @Schema(description = "Emb codes of the product")
@@ -150,10 +74,6 @@ public class ProductItem {
     @Schema(description = "Expiration date of the product")
     private String expirationDate;
 
-    @JsonProperty("fruitsVegetablesNuts100GEstimate")
-    @Schema(description = "Estimate of fruits, vegetables, and nuts per 100g")
-    private int fruitsVegetablesNuts100GEstimate;
-
     @JsonProperty("genericName")
     @Schema(description = "Generic name of the product")
     private String genericName;
@@ -166,25 +86,13 @@ public class ProductItem {
     @Schema(description = "Alternate unique identifier for the product")
     private String _id;
 
-    @JsonProperty("ingredientsFromOrThatMayBeFromPalmOilN")
-    @Schema(description = "Number of ingredients that are or may be from palm oil")
-    private int ingredientsFromOrThatMayBeFromPalmOilN;
-
     @JsonProperty("ingredientsFromPalmOilTags")
     @Schema(description = "Tags for ingredients from palm oil")
     private String[] ingredientsFromPalmOilTags;
 
-    @JsonProperty("ingredientsFromPalmOilN")
-    @Schema(description = "Number of ingredients from palm oil")
-    private int ingredientsFromPalmOilN;
-
     @JsonProperty("ingredientsHierarchy")
     @Schema(description = "Hierarchy of ingredients")
     private String[] ingredientsHierarchy;
-
-    @JsonProperty("ingredientsN")
-    @Schema(description = "Number of ingredients")
-    private int ingredientsN;
 
     @JsonProperty("ingredientsNTags")
     @Schema(description = "Tags related to the number of ingredients")
@@ -202,10 +110,6 @@ public class ProductItem {
     @Schema(description = "Debug text for ingredients")
     private String ingredientsTextDebug;
 
-    @JsonProperty("ingredientsThatMayBeFromPalmOilN")
-    @Schema(description = "Number of ingredients that may be from palm oil")
-    private int ingredientsThatMayBeFromPalmOilN;
-
     @JsonProperty("ingredientsThatMayBeFromPalmOilTags")
     @Schema(description = "Tags for ingredients that may be from palm oil")
     private String[] ingredientsThatMayBeFromPalmOilTags;
@@ -213,10 +117,6 @@ public class ProductItem {
     @JsonProperty("keywords")
     @Schema(description = "Keywords associated with the product")
     private String[] keywords;
-
-    @JsonProperty("knownIngredientsN")
-    @Schema(description = "Number of known ingredients in the product")
-    private int knownIngredientsN;
 
     @JsonProperty("labels")
     @Schema(description = "Labels of the product")
@@ -258,14 +158,6 @@ public class ProductItem {
     @Schema(description = "Tags for the last edit dates")
     private String[] lastEditDatesTags;
 
-    @JsonProperty("lastImageDatesTags")
-    @Schema(description = "Tags for the dates of the last images uploaded")
-    private String[] lastImageDatesTags;
-
-    @JsonProperty("lastImageT")
-    @Schema(description = "Timestamp for the last image uploaded")
-    private long lastImageT;
-
     @JsonProperty("languageCode")
     @Schema(description = "Language code")
     private String lc;
@@ -290,10 +182,6 @@ public class ProductItem {
     @Schema(description = "Tags for manufacturing places")
     private String[] manufacturingPlacesTags;
 
-    @JsonProperty("maxImgid")
-    @Schema(description = "Maximum image ID of the product")
-    private String maxImgid;
-
     @JsonProperty("mineralsPrevTags")
     @Schema(description = "Previous tags for minerals")
     private String[] mineralsPrevTags;
@@ -317,10 +205,6 @@ public class ProductItem {
     @JsonProperty("nutritionDataPer")
     @Schema(description = "Basis of the nutrition data (e.g., 'per serving', 'per 100g')")
     private String nutritionDataPer;
-
-    @JsonProperty("nutritionScoreWarningNoFruitsVegetablesNuts")
-    @Schema(description = "Nutrition score warning regarding the absence of fruits, vegetables, and nuts")
-    private int nutritionScoreWarningNoFruitsVegetablesNuts;
 
     @JsonProperty("noNutritionData")
     @Schema(description = "Indicator if there is no nutrition data")
@@ -378,17 +262,9 @@ public class ProductItem {
     @Schema(description = "Nutrition grades for the product")
     private String nutritionGrades;
 
-    @JsonProperty("nutritionScoreBeverage")
-    @Schema(description = "Nutrition score for beverages")
-    private int nutritionScoreBeverage;
-
     @JsonProperty("nutritionScoreDebug")
     @Schema(description = "Debug information for nutrition score")
     private String nutritionScoreDebug;
-
-    @JsonProperty("nutritionScoreWarningNoFiber")
-    @Schema(description = "Nutrition score warning for no fiber")
-    private int nutritionScoreWarningNoFiber;
 
     @JsonProperty("nutritionGradesTags")
     @Schema(description = "Tags for nutrition grades")
@@ -417,10 +293,6 @@ public class ProductItem {
     @JsonProperty("packaging")
     @Schema(description = "Packaging of the product")
     private String packaging;
-
-    @JsonProperty("popularityKey")
-    @Schema(description = "Key indicating the product's popularity")
-    private long popularityKey;
 
     @JsonProperty("producerVersionId")
     @Schema(description = "ID of the producer version")
@@ -462,10 +334,6 @@ public class ProductItem {
     @Schema(description = "Instructions for discarding packaging for recycling purposes")
     private String recyclingInstructionsToDiscard;
 
-    @JsonProperty("rev")
-    @Schema(description = "Revision number of the product entry")
-    private int rev;
-
     @JsonProperty("servingQuantity")
     @Schema(description = "Quantity per serving of the product")
     private String servingQuantity;
@@ -477,10 +345,6 @@ public class ProductItem {
     @JsonProperty("servingSizeDebugTags")
     @Schema(description = "Debug tags for serving size")
     private String[] servingSizeDebugTags;
-
-    @JsonProperty("sortKey")
-    @Schema(description = "Sorting key for the product")
-    private long sortKey;
 
     @JsonProperty("states")
     @Schema(description = "States of the product in the production chain")
@@ -534,10 +398,6 @@ public class ProductItem {
     @Schema(description = "Tags for traces")
     private String[] tracesTags;
 
-    @JsonProperty("unknownIngredientsN")
-    @Schema(description = "Number of unknown ingredients")
-    private int unknownIngredientsN;
-
     @JsonProperty("unknownNutrientsTags")
     @Schema(description = "Tags for unknown nutrients")
     private String[] unknownNutrientsTags;
@@ -553,31 +413,5 @@ public class ProductItem {
     @JsonProperty("vitaminsTags")
     @Schema(description = "Tags for vitamins")
     private String[] vitaminsTags;
-
-    @JsonProperty("additives")
-    public void setAdditives(Additive additive) {
-        this.additive = new Additive(
-                additivesN,
-                additivesNewN,
-                additivesOldN,
-                additivesOriginalTags,
-                additivesOldTags,
-                additivesPrevOriginalTags,
-                additivesDebugTags,
-                additivesTags
-        );
-    }
-
-    @JsonProperty("allergens")
-    public void setAllergens(Allergen allergen) {
-        this.allergen = new Allergen(
-                traces,
-                allergens,
-                allergensFromIngredients,
-                allergensHierarchy,
-                allergensLc,
-                allergensTags
-        );
-    }
 
 }
