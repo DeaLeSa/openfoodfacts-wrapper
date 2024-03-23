@@ -5,6 +5,7 @@ import fr.dlesaout.openfoodfactswrapper.service.ProductService;
 import fr.dlesaout.openfoodfactswrapper.util.ApiUrls;
 import fr.dlesaout.openfoodfactswrapper.util.Attributes;
 import fr.dlesaout.openfoodfactswrapper.util.HttpHeadersUtil;
+import fr.dlesaout.openfoodfactswrapper.util.JsonKeys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -29,24 +30,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse fetchProductByCode(String code, List<String> fields) {
+    public ProductResponse fetchProductByCode(String code) {
         HttpHeaders headers = HttpHeadersUtil.createHttpHeaders();
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-        StringBuilder urlBuilder = new StringBuilder(String.format(ApiUrls.PRODUCT_BY_CODE.url, code));
-        if (fields != null && !fields.isEmpty()) {
-            appendQueryParam(urlBuilder, "fields", fields);
-        }
-
-        return restTemplate.exchange(urlBuilder.toString(), HttpMethod.GET, requestEntity, ProductResponse.class).getBody();
+        return restTemplate.exchange(String.format(ApiUrls.PRODUCT_BY_CODE.url, code), HttpMethod.GET, requestEntity, ProductResponse.class).getBody();
     }
 
     @Override
-    public ProductList fetchProducts(String nutriscore, String category, String brand, List<String> fields, Integer page) {
+    public ProductList fetchProducts(String nutriscore, String category, String brand, Integer page) {
         HttpHeaders headers = HttpHeadersUtil.createHttpHeaders();
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-        String url = buildUrlForSearch(nutriscore, category, brand, fields, page);
+        String url = buildUrlForSearch(nutriscore, category, brand, page);
 
         ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
                 url,
@@ -56,15 +52,14 @@ public class ProductServiceImpl implements ProductService {
                 }
         );
 
-        return processResponse(responseEntity, fields);
+        return processResponse(responseEntity);
     }
 
-    private String buildUrlForSearch(String nutriscore, String category, String brand, List<String> fields, Integer page) {
+    private String buildUrlForSearch(String nutriscore, String category, String brand, Integer page) {
         StringBuilder urlBuilder = new StringBuilder(ApiUrls.BASE_SEARCH.url);
         appendQueryParam(urlBuilder, Attributes.NUTRITION_GRADES_TAGS.getAttribute(), nutriscore);
         appendQueryParam(urlBuilder, Attributes.CATEGORIES_TAGS.getAttribute(), category);
         appendQueryParam(urlBuilder, Attributes.BRANDS_TAGS.getAttribute(), brand);
-        appendQueryParam(urlBuilder, Attributes.FIELDS.getAttribute(), fields);
         urlBuilder.append(Attributes.PAGE.getAttribute()).append("=").append(page != null ? page : 1).append("&json=true");
 
         return urlBuilder.toString();
@@ -76,14 +71,7 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private void appendQueryParam(StringBuilder urlBuilder, String param, List<String> values) {
-        if (values != null && !values.isEmpty()) {
-            String value = String.join(",", values);
-            urlBuilder.append(param).append("=").append(value).append("&");
-        }
-    }
-
-    private ProductList processResponse(ResponseEntity<Map<String, Object>> responseEntity, List<String> fields) {
+    private ProductList processResponse(ResponseEntity<Map<String, Object>> responseEntity) {
         List<ProductResponse> productList = new ArrayList<>();
         Map<String, Object> body = responseEntity.getBody();
 
@@ -93,8 +81,8 @@ public class ProductServiceImpl implements ProductService {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tempList = (List<Map<String, Object>>) productListObj;
                 List<ProductResponse> collectedResponses = tempList.parallelStream()
-                        .filter(productMap -> productMap.containsKey("code"))
-                        .map(productMap -> fetchProductByCode((String) productMap.get("code"), fields))
+                        .filter(productMap -> productMap.containsKey(JsonKeys.CODE))
+                        .map(productMap -> fetchProductByCode((String) productMap.get("code")))
                         .toList();
                 productList.addAll(collectedResponses);
             }
