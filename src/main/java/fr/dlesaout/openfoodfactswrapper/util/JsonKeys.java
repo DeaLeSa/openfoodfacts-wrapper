@@ -5,8 +5,16 @@ public class JsonKeys {
     private JsonKeys() {
     }
 
-    // Code
+    // General
     public static final String CODE = "code";
+    public static final String PRODUCTS = "products";
+    public static final String COUNT = "count";
+    public static final String PAGE = "page";
+    public static final String PAGE_COUNT = "page_count";
+    public static final String PAGE_SIZE = "page_size";
+    public static final String NUTRITION_GRADES_TAGS = "nutrition_grades_tags";
+    public static final String CATEGORIES_TAGS = "categories_tags";
+    public static final String BRANDS_TAGS = "brands_tags";
 
     // Images
     public static final String SELECTED_IMAGES = "selected_images";
@@ -19,6 +27,17 @@ public class JsonKeys {
 
     // Ingredients
     public static final String INGREDIENTS = "ingredients";
+    public static final String ID = "id";
+    public static final String CIQUAL_PROXY_FOOD_CODE = "ciqual_proxy_food_code";
+    public static final String FROM_PALM_OIL = "from_palm_oil";
+    public static final String ORIGIN = "origin";
+    public static final String PERCENT = "percent";
+    public static final String PERCENT_ESTIMATE = "percent_estimate";
+    public static final String PERCENT_MAX = "percent_max";
+    public static final String PERCENT_MIN = "percent_min";
+    public static final String TEXT = "text";
+    public static final String VEGAN = "vegan";
+    public static final String VEGETARIAN = "vegetarian";
 
     // Additives
     public static final String ADDITIVES_N = "additives_n";

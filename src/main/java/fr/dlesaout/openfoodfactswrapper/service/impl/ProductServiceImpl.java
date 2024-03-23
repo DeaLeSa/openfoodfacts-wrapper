@@ -3,7 +3,6 @@ package fr.dlesaout.openfoodfactswrapper.service.impl;
 import fr.dlesaout.openfoodfactswrapper.model.*;
 import fr.dlesaout.openfoodfactswrapper.service.ProductService;
 import fr.dlesaout.openfoodfactswrapper.util.ApiUrls;
-import fr.dlesaout.openfoodfactswrapper.util.Attributes;
 import fr.dlesaout.openfoodfactswrapper.util.HttpHeadersUtil;
 import fr.dlesaout.openfoodfactswrapper.util.JsonKeys;
 import lombok.extern.slf4j.Slf4j;
@@ -57,10 +56,10 @@ public class ProductServiceImpl implements ProductService {
 
     private String buildUrlForSearch(String nutriscore, String category, String brand, Integer page) {
         StringBuilder urlBuilder = new StringBuilder(ApiUrls.BASE_SEARCH.url);
-        appendQueryParam(urlBuilder, Attributes.NUTRITION_GRADES_TAGS.getAttribute(), nutriscore);
-        appendQueryParam(urlBuilder, Attributes.CATEGORIES_TAGS.getAttribute(), category);
-        appendQueryParam(urlBuilder, Attributes.BRANDS_TAGS.getAttribute(), brand);
-        urlBuilder.append(Attributes.PAGE.getAttribute()).append("=").append(page != null ? page : 1).append("&json=true");
+        appendQueryParam(urlBuilder, JsonKeys.NUTRITION_GRADES_TAGS, nutriscore);
+        appendQueryParam(urlBuilder, JsonKeys.CATEGORIES_TAGS, category);
+        appendQueryParam(urlBuilder, JsonKeys.BRANDS_TAGS, brand);
+        urlBuilder.append(JsonKeys.PAGE).append("=").append(page != null ? page : 1).append("&json=true");
 
         return urlBuilder.toString();
     }
@@ -76,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
         Map<String, Object> body = responseEntity.getBody();
 
         if (body != null && !body.isEmpty()) {
-            Object productListObj = body.get(Attributes.PRODUCTS.getAttribute());
+            Object productListObj = body.get(JsonKeys.PRODUCTS);
             if (productListObj instanceof List) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> tempList = (List<Map<String, Object>>) productListObj;
@@ -102,10 +101,10 @@ public class ProductServiceImpl implements ProductService {
         int numberMaxOfItemsPerPage = 0;
 
         if (body != null && !body.isEmpty()) {
-            numberOfProducts = Integer.parseInt(body.get(Attributes.COUNT.getAttribute()).toString());
-            pageNumber = Integer.parseInt(body.get(Attributes.PAGE.getAttribute()).toString());
-            numberOfItemsInSelectedPage = Integer.parseInt(body.get(Attributes.PAGE_COUNT.getAttribute()).toString());
-            numberMaxOfItemsPerPage = Integer.parseInt(body.get(Attributes.PAGE_SIZE.getAttribute()).toString());
+            numberOfProducts = Integer.parseInt(body.get(JsonKeys.COUNT).toString());
+            pageNumber = Integer.parseInt(body.get(JsonKeys.PAGE).toString());
+            numberOfItemsInSelectedPage = Integer.parseInt(body.get(JsonKeys.PAGE_COUNT).toString());
+            numberMaxOfItemsPerPage = Integer.parseInt(body.get(JsonKeys.PAGE_SIZE).toString());
         }
 
         PaginationInfo paginationInfo = new PaginationInfo();
