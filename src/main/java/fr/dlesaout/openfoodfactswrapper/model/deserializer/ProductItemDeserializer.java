@@ -25,7 +25,7 @@ public class ProductItemDeserializer extends StdDeserializer<ProductItem> {
         ProductItem productItem = new ProductItem();
         parseImage(productItem, node);
 
-        productItem.setProductName(getStringValue(node, JsonKeys.PRODUCT_NAME));
+        productItem.setProductName(getStringValue(node));
 
         productItem.setIngredients(parseIngredients(node.get(JsonKeys.INGREDIENTS)));
         productItem.setAdditives(parseAdditive(node));
@@ -36,8 +36,8 @@ public class ProductItemDeserializer extends StdDeserializer<ProductItem> {
         return productItem;
     }
 
-    private String getStringValue(JsonNode parentNode, String key) {
-        return parentNode.has(key) ? parentNode.get(key).asText() : null;
+    private String getStringValue(JsonNode parentNode) {
+        return parentNode.has(JsonKeys.PRODUCT_NAME) ? parentNode.get(JsonKeys.PRODUCT_NAME).asText() : null;
     }
 
     private List<String> asStringList(JsonNode arrayNode) {
@@ -78,20 +78,20 @@ public class ProductItemDeserializer extends StdDeserializer<ProductItem> {
     private Ingredient parseIngredient(JsonNode node) {
         Ingredient ingredient = new Ingredient();
 
-        ingredient.setId(node.path("id").asText(null));
-        ingredient.setCiqualProxyFoodScore(node.path("ciqual_proxy_food_code").asText(null));
-        ingredient.setFromPalmOil(node.path("from_palm_oil").asText(null));
-        ingredient.setOrigin(node.path("origin").asText(null));
-        ingredient.setPercent(node.path("percent").asDouble(0));
-        ingredient.setPercentEstimate(node.path("percent_estimate").asDouble(0));
-        ingredient.setPercentMax(node.path("percent_max").asDouble(0));
-        ingredient.setPercentMin(node.path("percent_min").asDouble(0));
-        ingredient.setText(node.path("text").asText(null));
-        ingredient.setVegan(node.path("vegan").asText(null));
-        ingredient.setVegetarian(node.path("vegetarian").asText(null));
+        ingredient.setId(node.path(JsonKeys.ID).asText(null));
+        ingredient.setCiqualProxyFoodScore(node.path(JsonKeys.CIQUAL_PROXY_FOOD_CODE).asText(null));
+        ingredient.setFromPalmOil(node.path(JsonKeys.FROM_PALM_OIL).asText(null));
+        ingredient.setOrigin(node.path(JsonKeys.ORIGIN).asText(null));
+        ingredient.setPercent(node.path(JsonKeys.PERCENT).asDouble(0));
+        ingredient.setPercentEstimate(node.path(JsonKeys.PERCENT_ESTIMATE).asDouble(0));
+        ingredient.setPercentMax(node.path(JsonKeys.PERCENT_MAX).asDouble(0));
+        ingredient.setPercentMin(node.path(JsonKeys.PERCENT_MIN).asDouble(0));
+        ingredient.setText(node.path(JsonKeys.TEXT).asText(null));
+        ingredient.setVegan(node.path(JsonKeys.VEGAN).asText(null));
+        ingredient.setVegetarian(node.path(JsonKeys.VEGETARIAN).asText(null));
 
-        if (node.has("ingredients")) {
-            ingredient.setIngredients(parseIngredients(node.get("ingredients")));
+        if (node.has(JsonKeys.INGREDIENTS)) {
+            ingredient.setIngredients(parseIngredients(node.get(JsonKeys.INGREDIENTS)));
         }
 
         return ingredient;
