@@ -2,9 +2,9 @@ package fr.dlesaout.openfoodfactswrapper.util;
 
 public enum ApiUrls {
 
-    BASE("https://fr.openfoodfacts.net/api/v2"),
-    BASE_SEARCH("https://fr.openfoodfacts.net/api/v2/search?"),
-    PRODUCT_BY_CODE("https://fr.openfoodfacts.net/api/v2/product/%s.json");
+    BASE("https://fr.openfoodfacts.org/api/v2"),
+    BASE_SEARCH("https://fr.openfoodfacts.org/api/v2/search?"),
+    PRODUCT_BY_CODE("https://fr.openfoodfacts.org/api/v2/product/%s.json");
 
     public final String url;
 

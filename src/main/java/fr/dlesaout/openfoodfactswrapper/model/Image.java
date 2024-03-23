@@ -17,14 +17,11 @@ import java.util.Map;
 @NoArgsConstructor
 public class Image {
 
-    private Map<String, Object> other = new LinkedHashMap<>();
+    private Map<String, Object> productImage = new LinkedHashMap<>();
 
     @JsonAnySetter
     public void addImageDetail(String key, Object value) {
-        this.other.put(key, value);
+        this.productImage.put(key, value);
     }
 
-    public Map<String, Object> getImages() {
-        return other;
-    }
 }

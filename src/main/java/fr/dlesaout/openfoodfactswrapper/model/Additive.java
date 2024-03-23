@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
 @JsonTypeName("Additive")
@@ -32,22 +34,22 @@ public class Additive {
 
     @Schema(description = "Original tags for additives")
     @JsonProperty("additivesOriginalTags")
-    private String[] additivesOriginalTags;
+    private List<String> additivesOriginalTags;
 
     @Schema(description = "Old tags for additives")
     @JsonProperty("additivesOldTags")
-    private String[] additivesOldTags;
+    private List<String> additivesOldTags;
 
     @Schema(description = "Previous original tags for additives")
     @JsonProperty("additivesPrevOriginalTags")
-    private String[] additivesPrevOriginalTags;
+    private List<String> additivesPrevOriginalTags;
 
     @Schema(description = "Debug tags for additives")
     @JsonProperty("additivesDebugTags")
-    private String[] additivesDebugTags;
+    private List<String> additivesDebugTags;
 
     @Schema(description = "Current tags for additives")
     @JsonProperty("additivesTags")
-    private String[] additivesTags;
+    private List<String> additivesTags;
 
 }
