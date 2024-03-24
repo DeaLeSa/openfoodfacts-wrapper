@@ -24,30 +24,18 @@ public class ProductItemDeserializer extends StdDeserializer<ProductItem> {
         JsonNode node = p.getCodec().readTree(p);
 
         ProductItem productItem = new ProductItem();
-        parseImage(productItem, node);
 
-        productItem.setProductName(getStringValue(node, JsonKeys.PRODUCT_NAME));
-        productItem.setBrands(getStringValue(node, JsonKeys.BRANDS));
+        parseImage(productItem, node);
+        parseGeneralInformation(productItem, node);
+
         productItem.setIngredients(parseIngredients(node.get(JsonKeys.INGREDIENTS)));
         productItem.setAdditives(parseAdditive(node));
         productItem.setAllergenicSubstances(parseAllergen(node));
         productItem.setNutrients(parseNutrient(node.get(JsonKeys.NUTRIENTS)));
         productItem.setCountries(parseCountry(node));
-        productItem.setEcoScore(parseEcoScore(node.get(JsonKeys.ECOSCORE)));
+        productItem.setEcoScore(parseEcoScore(node, node.get(JsonKeys.ECOSCORE)));
 
         return productItem;
-    }
-
-    private String getStringValue(JsonNode parentNode, String jsonKey) {
-        return parentNode.has(jsonKey) ? parentNode.get(jsonKey).asText() : null;
-    }
-
-    private List<String> asStringList(JsonNode arrayNode) {
-        List<String> strings = new ArrayList<>();
-        if (arrayNode.isArray()) {
-            arrayNode.forEach(item -> strings.add(item.asText()));
-        }
-        return strings;
     }
 
     private void parseImage(ProductItem productItem, JsonNode node) {
@@ -64,6 +52,15 @@ public class ProductItemDeserializer extends StdDeserializer<ProductItem> {
                 }
             }
         }
+    }
+
+    private void parseGeneralInformation(ProductItem productItem, JsonNode generalInformationNode) {
+        setIfPresent(generalInformationNode, JsonKeys.PRODUCT_NAME, value -> productItem.setProductName(value.asText()));
+        setIfPresent(generalInformationNode, JsonKeys.BRANDS, value -> productItem.setBrands(value.asText()));
+        setIfPresent(generalInformationNode, JsonKeys.BRANDS_TAGS, value -> productItem.setBrandsTags(asStringList(value)));
+        setIfPresent(generalInformationNode, JsonKeys.NUTRISCORE, value -> productItem.setNutriscore(value.asText()));
+        setIfPresent(generalInformationNode, JsonKeys.STORES, value -> productItem.setStores(value.asText()));
+        setIfPresent(generalInformationNode, JsonKeys.STORES_TAGS, value -> productItem.setStoresTags(asStringList(value)));
     }
 
     private List<Ingredient> parseIngredients(JsonNode ingredientsNode) {
@@ -219,11 +216,14 @@ public class ProductItemDeserializer extends StdDeserializer<ProductItem> {
         return country;
     }
 
-    private EcoScore parseEcoScore(JsonNode ecoScoreNode) {
+    private EcoScore parseEcoScore(JsonNode productItemNode, JsonNode ecoScoreNode) {
         EcoScore ecoScoreData = new EcoScore();
         Adjustment adjustments = new Adjustment();
 
-        setIfPresent(ecoScoreNode, JsonKeys.ECOSCORE_NOT_APPLICABLE_FOR_CATEGORY, value -> ecoScoreData.setEcoscoreNotApplicableForCategory(value.asText()));
+        setIfPresent(productItemNode, JsonKeys.ECOSCORE_NOT_APPLICABLE_FOR_CATEGORY, value -> ecoScoreData.setEcoScoreNotApplicableForCategory(value.asText()));
+        setIfPresent(productItemNode, JsonKeys.ECOSCORE_GRADE, value -> ecoScoreData.setEcoScoreGrade(value.asText()));
+        setIfPresent(productItemNode, JsonKeys.ECOSCORE_SCORE, value -> ecoScoreData.setEcoScoreScore(value.asInt()));
+        setIfPresent(productItemNode, JsonKeys.ECOSCORE_TAGS, value -> ecoScoreData.setEcoScoreTags(asStringList(value)));
 
         JsonNode adjustmentsNode = ecoScoreNode.path(JsonKeys.ADJUSTMENTS);
 
@@ -295,13 +295,50 @@ public class ProductItemDeserializer extends StdDeserializer<ProductItem> {
 
         ecoScoreData.setAdjustments(adjustments);
 
+        JsonNode agribalyseNode = ecoScoreNode.path(JsonKeys.AGRIBALYSE);
+
+        Agribalyse agribalyse = new Agribalyse();
+
+        setIfPresent(agribalyseNode, JsonKeys.AGRIBALYSE_PROXY_FOOD_CODE, value -> agribalyse.setAgribalyseProxyFoodCode(value.asText()));
+        setIfPresent(agribalyseNode, JsonKeys.CO2_AGRICULTURE, value -> agribalyse.setCo2Agriculture(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.CO2_CONSUMPTION, value -> agribalyse.setCo2Consumption(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.CO2_DISTRIBUTION, value -> agribalyse.setCo2Distribution(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.CO2_PACKAGING, value -> agribalyse.setCo2Packaging(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.CO2_PROCESSING, value -> agribalyse.setCo2Processing(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.CO2_TOTAL, value -> agribalyse.setCo2Total(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.CO2_TRANSPORTATION, value -> agribalyse.setCo2Transportation(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.CODE, value -> agribalyse.setCode(value.asText()));
+        setIfPresent(agribalyseNode, JsonKeys.DQR, value -> agribalyse.setDqr(value.asText()));
+        setIfPresent(agribalyseNode, JsonKeys.EF_AGRICULTURE, value -> agribalyse.setEfAgriculture(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.EF_CONSUMPTION, value -> agribalyse.setEfConsumption(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.EF_DISTRIBUTION, value -> agribalyse.setEfDistribution(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.EF_PACKAGING, value -> agribalyse.setEfPackaging(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.EF_PROCESSING, value -> agribalyse.setEfProcessing(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.EF_TOTAL, value -> agribalyse.setEfTotal(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.EF_TRANSPORTATION, value -> agribalyse.setEfTransportation(value.asDouble()));
+        setIfPresent(agribalyseNode, JsonKeys.IS_BEVERAGE, value -> agribalyse.setIsBeverage(value.asInt()));
+        setIfPresent(agribalyseNode, JsonKeys.NAME_EN, value -> agribalyse.setNameEn(value.asText()));
+        setIfPresent(agribalyseNode, JsonKeys.NAME_FR, value -> agribalyse.setNameFr(value.asText()));
+        setIfPresent(agribalyseNode, JsonKeys.SCORE, value -> agribalyse.setScore(value.asInt()));
+        setIfPresent(agribalyseNode, JsonKeys.VERSION, value -> agribalyse.setVersion(value.asText()));
+
+        ecoScoreData.setAgribalyse(agribalyse);
+
         return ecoScoreData;
     }
 
     private void setIfPresent(JsonNode parentNode, String key, Consumer<JsonNode> action) {
-        if (parentNode.has(key)) {
+        if (parentNode != null && parentNode.has(key)) {
             action.accept(parentNode.get(key));
         }
+    }
+
+    private List<String> asStringList(JsonNode arrayNode) {
+        List<String> strings = new ArrayList<>();
+        if (arrayNode.isArray()) {
+            arrayNode.forEach(item -> strings.add(item.asText()));
+        }
+        return strings;
     }
 
 

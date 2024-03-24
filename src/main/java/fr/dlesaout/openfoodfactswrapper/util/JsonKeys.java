@@ -25,6 +25,9 @@ public class JsonKeys {
     // Product Info
     public static final String PRODUCT_NAME = "product_name";
     public static final String BRANDS = "brands";
+    public static final String NUTRISCORE = "nutriscore_grade";
+    public static final String STORES = "stores";
+    public static final String STORES_TAGS = "stores_tags";
 
     // Ingredients
     public static final String INGREDIENTS = "ingredients";
@@ -141,6 +144,9 @@ public class JsonKeys {
 
     // EcoScore and Adjustments
     public static final String ECOSCORE = "ecoscore_data";
+    public static final String ECOSCORE_GRADE = "ecoscore_grade";
+    public static final String ECOSCORE_SCORE = "ecoscore_score";
+    public static final String ECOSCORE_TAGS = "ecoscore_tags";
     public static final String ECOSCORE_NOT_APPLICABLE_FOR_CATEGORY = "ecoscore_not_applicable_for_category";
     public static final String ORIGINS_OF_INGREDIENTS = "origins_of_ingredients";
     public static final String EPI_SCORE = "epi_score";
@@ -171,5 +177,28 @@ public class JsonKeys {
     // Theatened species
     public static final String THREATENED_SPECIES = "threatened_species";
     public static final String INGREDIENT = "ingredient";
+
+    // Agribalyse
+    public static final String AGRIBALYSE = "agribalyse";
+    public static final String AGRIBALYSE_PROXY_FOOD_CODE = "agribalyse_proxy_food_code";
+    public static final String CO2_AGRICULTURE = "co2_agriculture";
+    public static final String CO2_CONSUMPTION = "co2_consumption";
+    public static final String CO2_DISTRIBUTION = "co2_distribution";
+    public static final String CO2_PACKAGING = "co2_packaging";
+    public static final String CO2_PROCESSING = "co2_processing";
+    public static final String CO2_TOTAL = "co2_total";
+    public static final String CO2_TRANSPORTATION = "co2_transportation";
+    public static final String DQR = "dqr";
+    public static final String EF_AGRICULTURE = "ef_agriculture";
+    public static final String EF_CONSUMPTION = "ef_consumption";
+    public static final String EF_DISTRIBUTION = "ef_distribution";
+    public static final String EF_PACKAGING = "ef_packaging";
+    public static final String EF_PROCESSING = "ef_processing";
+    public static final String EF_TOTAL = "ef_total";
+    public static final String EF_TRANSPORTATION = "ef_transportation";
+    public static final String IS_BEVERAGE = "is_beverage";
+    public static final String NAME_EN = "name_en";
+    public static final String NAME_FR = "name_fr";
+    public static final String VERSION = "version";
 
 }
