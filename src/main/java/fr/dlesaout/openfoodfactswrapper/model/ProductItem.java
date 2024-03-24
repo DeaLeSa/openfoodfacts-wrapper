@@ -28,6 +28,30 @@ public class ProductItem {
     @Schema(description = "Image of the product")
     private String imageUrl;
 
+    @JsonProperty("brands")
+    @Schema(description = "Brands of the product")
+    private String brands;
+
+    @JsonProperty("brandsTags")
+    @Schema(description = "Brands tags of the product")
+    private List<String> brandsTags;
+
+    @JsonProperty("productName")
+    @Schema(description = "Name of the product")
+    private String productName;
+
+    @JsonProperty("nutriscore")
+    @Schema(description = "Nutriscore")
+    private String nutriscore;
+
+    @JsonProperty("stores")
+    @Schema(description = "Stores selling the product")
+    private String stores;
+
+    @JsonProperty("storesTags")
+    @Schema(description = "Tags for stores selling the product")
+    private List<String> storesTags;
+
     @Schema(description = "List of ingredients in the product")
     private List<Ingredient> ingredients;
 
@@ -86,10 +110,6 @@ public class ProductItem {
     @JsonProperty("id")
     @Schema(description = "Unique identifier for the product")
     private String id;
-
-    @JsonProperty("altId")
-    @Schema(description = "Alternate unique identifier for the product")
-    private String _id;
 
     @JsonProperty("ingredientsFromPalmOilTags")
     @Schema(description = "Tags for ingredients from palm oil")
@@ -303,14 +323,6 @@ public class ProductItem {
     @Schema(description = "ID of the producer version")
     private String producerVersionId;
 
-    @JsonProperty("brands")
-    @Schema(description = "Brands of the product")
-    private String brands;
-
-    @JsonProperty("productName")
-    @Schema(description = "Name of the product")
-    private String productName;
-
     @JsonProperty("productQuantity")
     @Schema(description = "Quantity of the product")
     private String productQuantity;
@@ -366,18 +378,6 @@ public class ProductItem {
     @JsonProperty("statesTags")
     @Schema(description = "Tags for the product states")
     private String[] statesTags;
-
-    @JsonProperty("stores")
-    @Schema(description = "Stores where the product is available")
-    private String stores;
-
-    @JsonProperty("storesDebugTags")
-    @Schema(description = "Debug tags for stores")
-    private String[] storesDebugTags;
-
-    @JsonProperty("storesTags")
-    @Schema(description = "Tags for stores selling the product")
-    private String[] storesTags;
 
     @JsonProperty("traces")
     @Schema(description = "Traces of allergens or cross-contamination")
